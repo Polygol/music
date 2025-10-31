@@ -2225,7 +2225,7 @@
                     <span class="material-symbols-rounded">skip_previous</span>
                 </button>
                 <button class="control-btn play-pause" id="playPauseBtn">
-                    <span class="material-symbols-rounded" id="playPauseIcon" style="font-size: 36px;">play_arrow</span>
+                    <span class="material-symbols-rounded" id="playPauseIcon" style="font-size: 36px; font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;">play_arrow</span>
                 </button>
                 <button class="control-btn" id="nextBtn">
                     <span class="material-symbols-rounded">skip_next</span>
@@ -5787,7 +5787,7 @@ function updateMiniplayerUI(song, state) {
     miniplayerArt.src = song.albumArt;
     miniplayerTitle.textContent = sanitize(song.name);
     miniplayerArtist.textContent = sanitize(song.artist);
-    miniplayerPlayBtn.innerHTML = `<span class="material-symbols-rounded">${state === 'playing' ? 'pause' : 'play_arrow'}</span>`;
+    miniplayerPlayBtn.innerHTML = `<span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;">${state === 'playing' ? 'pause' : 'play_arrow'}</span>`;
 }
         
 async function getSongFileUrl(song) {
