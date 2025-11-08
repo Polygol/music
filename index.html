@@ -7196,7 +7196,7 @@ audioPlayer.addEventListener('timeupdate', async () => {
         const duration = song.duration || audioPlayer.duration;
         const percentage = (audioPlayer.currentTime / duration) * 100;
         progress.style.width = `${percentage}%`;
-        const scaledPercentage = (percentage / 100) * 93;
+        const scaledPercentage = (percentage / 100) * 92;
         miniplayerProgress.style.width = `${scaledPercentage}%`;
         updateTimeDisplays(audioPlayer.currentTime, audioPlayer.duration);
         updatePageTitle();
