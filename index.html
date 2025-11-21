@@ -1238,45 +1238,6 @@
           filter: brightness(1.5);
         }
 
-        #soundcloudToggle, #lrclibToggle, #corsProxyToggle {
-            appearance: none;
-            width: 50px;
-            height: 32px;
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 16px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-        }
-        
-        #soundcloudToggle::before, #lrclibToggle::before, #corsProxyToggle::before {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background-color: var(--secondary-text-color);
-            border-radius: 50%;
-            top: 50%;
-            left: 6px;
-            transform: translateY(-50%);
-            transition: transform 0.3s, background-color 0.3s, width 0.3s, height 0.3s, left 0.3s, right 0.3s;
-            border: 1px solid var(--glass-border);
-        }
-        
-        #soundcloudToggle:checked, #lrclibToggle:checked, #corsProxyToggle:checked {
-            background-color: var(--secondary-text-color);
-        }
-        
-        #soundcloudToggle:checked::before, #lrclibToggle:checked::before, #corsProxyToggle:checked::before {
-            width: 22px;
-            height: 22px;
-            background-color: var(--background-color);
-            left: 21px;
-            transform: translateY(-50%);
-        }
-
         @media (min-width: 560px) {
             .controls-container {
                 position: fixed;
@@ -2001,42 +1962,6 @@
             position: absolute;
             left: 50%;
             top: 50%;
-        }
-
-        #autoplayToggle {
-            appearance: none;
-            width: 38px;
-            height: 24px;
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            border: 1px solid var(--glass-border);
-        }
-        
-        #autoplayToggle::before {
-            content: '';
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background-color: var(--secondary-text-color);
-            border-radius: 50%;
-            top: 50%;
-            left: 3.5px;
-            transform: translateY(-50%);
-            transition: all 0.3s cubic-bezier(.3,1.2,.64,1);
-        }
-        
-        #autoplayToggle:checked {
-            background-color: var(--secondary-text-color);
-        }
-        
-        #autoplayToggle:checked::before {
-            background-color: var(--background-color);
-            left: 16px;
-            width: 18px;
-            height: 18px;
         }
 
         #drawer-delete-playlist-btn {
