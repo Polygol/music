@@ -3564,7 +3564,7 @@ async function migrateToFSA() {
         }
         
         await saveSongs();
-        Gurasuraisu.showPopup(`Successfully migrated ${blobIdsToDelete.length} songs to use direct file access, freeing up browser storage!`);
+        Gurasuraisu.showAlert(`Migrated ${blobIdsToDelete.length} items to use direct file access.`);
     }
 }
 
@@ -3672,7 +3672,7 @@ const availableMusicFunctions = {
         const songIds = songStrings.map(s => findSongByString(s)).filter(Boolean).map(s => s.id);
         
         if (songIds.length === 0) {
-            Gurasuraisu.showPopup(`GuraAI couldn't find matching songs.`);
+            Gurasuraisu.showPopup(`GuraAI couldn't find matching songs`);
             return;
         }
 
@@ -3688,7 +3688,7 @@ const availableMusicFunctions = {
         });
 
         playlists.push(newPlaylist);
-        Gurasuraisu.showPopup(`GuraAI created playlist: "${playlistName}"`);
+        Gurasuraisu.showAlert(`Created "${playlistName}"`, `Playlist was created using GuraAI.`);
         if (activeView === 'library') renderLibraryPage();
     }
     // getSongRecommendations is handled directly by the calling function, so it doesn't need an entry here.
@@ -5055,7 +5055,7 @@ async function searchLrclibForManualPick() {
                     song.lyrics = selectedTrack.plainLyrics;
                     song.lrcData = null;
                 } else {
-                    Gurasuraisu.showPopup("Selected track has no lyrics.");
+                    Gurasuraisu.showPopup("Selected track has no lyrics");
                     return;
                 }
 
@@ -5323,7 +5323,7 @@ function addToQueue(songId, position = 'last') {
         playQueue.push(song);
     }
 
-    Gurasuraisu.showPopup(`Added "${sanitize(song.name)}" to queue.`);
+    Gurasuraisu.showPopup(`Added "${sanitize(song.name)}" to queue`);
     
     if (isPanelVisible && panelContent === 'queue') {
         renderQueue();
@@ -6227,7 +6227,7 @@ async function processAndCacheSoundcloudTrack(songObject) {
 async function saveSoundcloudTrackToLibrary() {
     if (!currentlyPlayingSong || currentlyPlayingSong.storage !== 'soundcloud') return;
     if (currentlyPlayingSong.protocol && currentlyPlayingSong.protocol.includes('encrypted')) {
-        Gurasuraisu.showPopup("Saving encrypted streams is not supported.");
+        Gurasuraisu.showAlert("Could not save song.");
         return;
     }
 
@@ -6289,7 +6289,7 @@ async function saveSoundcloudTrackToLibrary() {
 
     } catch (error) {
         console.error("Failed to save SoundCloud track to library:", error);
-        Gurasuraisu.showPopup("Could not save song");
+        Gurasuraisu.showPopup("Cannot save song");
     }
 }
 
@@ -6489,7 +6489,7 @@ async function removeFolder(folderName) {
     updatePlayQueue();
 
     // 4. Show a confirmation message and refresh the UI.
-    Gurasuraisu.showPopup(`Removed "${folderName}" and ${removedSongCount} song(s).`);
+    Gurasuraisu.showPopup(`Removed "${folderName}"`);
     openManageFoldersModal(); // Refreshes the folder list inside the modal.
     if (activeView === 'library') {
         renderLibraryPage(); // Refreshes the main library view in the background.
@@ -7019,7 +7019,7 @@ window.addEventListener("load", async () => {
 
                 // If some handles were invalid, update the database with the cleaned list.
                 if (directoryHandles.length < storedHandles.length) {
-                    Gurasuraisu.showPopup("Some music folders need to be re-added after the system import.");
+                    Gurasuraisu.showAlert("Some music folders need to be re-added after the system import.");
                     const writeTx = db.transaction('config', 'readwrite');
                     writeTx.objectStore('config').put({ key: 'directoryHandles', value: directoryHandles });
                     await writeTx.done;
@@ -7594,7 +7594,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (call && call.name === 'createPlaylist') {
                     availableMusicFunctions.createPlaylist(call.args);
                 } else {
-                    Gurasuraisu.showPopup("GuraAI was unable to create a playlist from that prompt.");
+                    Gurasuraisu.showAlert("GuraAI was unable to create a playlist from that prompt");
                 }
                 promptInput.value = '';
                 e.target.htmlContent = '<span class="material-symbols-rounded" style="font-size: 18px;">add</span>';
@@ -7623,14 +7623,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </div>`).join('')}</div>`;
                             openDrawer("GuraAI Recommendations", prompt, contentHtml);
                         } else {
-                             Gurasuraisu.showPopup("GuraAI couldn't find any matching songs for that.");
+                             Gurasuraisu.showPopup("GuraAI couldn't find any matching songs for that");
                         }
                     } else {
-                        Gurasuraisu.showPopup("GuraAI could not process that request.");
+                        Gurasuraisu.showPopup("GuraAI could not process that request");
                     }
                 } catch (err) {
                     console.error("Error handling Home AI Prompt:", err);
-                    Gurasuraisu.showPopup("An error occurred with the AI request.");
+                    Gurasuraisu.showPopup("An error occurred with the AI request");
                 }
             };
         
@@ -7917,7 +7917,7 @@ document.getElementById('uploadBtn').addEventListener('click', async () => {
             
             for (const existingHandle of directoryHandles) {
                 if (await handle.isSameEntry(existingHandle)) {
-                    Gurasuraisu.showPopup("This folder has already been added.");
+                    Gurasuraisu.showPopup("This folder has already been added");
                     return;
                 }
             }
@@ -7955,7 +7955,7 @@ document.getElementById('uploadBtn').addEventListener('click', async () => {
                 Gurasuraisu.showPopup(`${filesToAdd.length} new songs added to Library`);
                 await addSongs(filesToAdd, 'filesystem');
             } else {
-                Gurasuraisu.showPopup('No new songs found in the selected directory.');
+                Gurasuraisu.showPopup('No new songs found in the selected directory');
             }
         }
 
@@ -7972,9 +7972,9 @@ document.getElementById('uploadBtn').addEventListener('click', async () => {
                     playPauseIcon.textContent = 'play_arrow';
                     playPauseBtn.classList.remove('playing');
                 }, minutes * 60 * 1000);
-                Gurasuraisu.showPopup(`Sleep timer set for ${minutes} minutes.`);
+                Gurasuraisu.showPopup(`Sleep timer set for ${minutes} minutes`);
             } else {
-                Gurasuraisu.showPopup('Sleep timer cancelled.');
+                Gurasuraisu.showPopup('Sleep timer cancelled');
             }
             closeModal(sleepTimerModal);
         }
@@ -8012,7 +8012,7 @@ async function loadSongsAndPlaylists() {
         async function createPlaylistAndAddSong() {
             const newName = document.getElementById('newPlaylistName').value.trim();
             if (!newName) return;
-            if (!currentSongId) return Gurasuraisu.showPopup("Please play a song first.");
+            if (!currentSongId) return Gurasuraisu.showAlert("Play an item first.");
         
             const newPlaylist = { name: newName, songIds: [currentSongId] };
             
@@ -8030,9 +8030,10 @@ async function loadSongsAndPlaylists() {
                 playlists.push(newPlaylist);
                 document.getElementById('newPlaylistName').value = '';
                 closeModal(playlistModal);
-                Gurasuraisu.showPopup(`Added song to new playlist "${newName}"`);
+                Gurasuraisu.showPopup(`Added item to new playlist "${newName}"`);
             } catch (error) {
                 console.error("Failed to create playlist:", error);
+                Gurasuraisu.showAlert(`Failed to create playlist`);
             }
         }
 
