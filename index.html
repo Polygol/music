@@ -4756,7 +4756,7 @@ async function deletePlaylist(playlistId) {
     const playlist = playlists.find(p => p.id === playlistId);
     if (!playlist) return;
 
-    if (confirm(`Are you sure you want to permanently delete the playlist "${playlist.name}"?`)) {
+    if (await Gurasuraisu.showConfirm(`Are you sure you want to permanently delete the playlist "${playlist.name}"?`)) {
         // 1. Remove the playlist from the in-memory array.
         playlists = playlists.filter(p => p.id !== playlistId);
 
@@ -6429,7 +6429,7 @@ function disconnectAudioGraph() {
 }
         
 async function removeFolder(folderName) {
-    if (!confirm(`Are you sure you want to remove the folder "${folderName}"? All songs from this folder will be removed from your library.`)) {
+    if (await Gurasuraisu.showConfirm(`Are you sure you want to remove the folder "${folderName}"? All songs from this folder will be removed from your library.`)) {
         return;
     }
 
@@ -7774,7 +7774,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         document.getElementById('menuDeleteSong').addEventListener('click', async () => {
-            if (currentSongId && confirm('Delete this song? This is permanent.')) await deleteSong(currentSongId);
+            if (currentSongId && await Gurasuraisu.showConfirm('Delete this song? This is permanent.')) await deleteSong(currentSongId);
             moreOptionsMenu.classList.remove('visible');
         });
         
