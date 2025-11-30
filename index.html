@@ -1786,22 +1786,23 @@
 
         .highlight-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
             margin-bottom: 40px;
         }
         .highlight-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
             border: 1px solid var(--glass-border);
             border-radius: 35px;
             corner-shape: superellipse(1.5);
-            padding: 10px 15px 10px 12px;
+            padding: 10px 12px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(.3,1.2,.64,1);
+            transition: all 0.3s cubic-bezier(.3, 1.2, .64, 1);
             box-shadow: var(--sun-shadow);
+            backdrop-filter: var(--edge-refraction-filter) saturate(2) blur(2.5px);
         }
         .highlight-card:active {
             transform: scale(0.96);
@@ -1809,9 +1810,9 @@
             filter: brightness(1.5);
         }
         .highlight-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             corner-shape: superellipse(1.5);
             box-shadow: 0 0 0 1px var(--glass-border);
             flex-shrink: 0;
@@ -1831,7 +1832,7 @@
             color: var(--secondary-text-color);
         }
         .highlight-card-title {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
@@ -1840,6 +1841,7 @@
         }
         .highlight-card-subtitle {
             color: var(--secondary-text-color);
+            font-size: 0.9rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -4316,9 +4318,7 @@ async function renderHomePage() {
             <div class="highlight-card-info">
                 <div class="highlight-card-label">${isListenAgain ? 'Listen Again' : 'From Your Library'}</div>
                 <div class="highlight-card-title">${sanitize(song.name)}</div>
-                <div class="highlight-card-subtitle">${sanitize(song.artist)}</div>
             </div>
-            <span class="material-symbols-rounded highlight-card-play">play_circle</span>
         </div>`;
     }).join('');
 
