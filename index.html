@@ -8000,6 +8000,8 @@ async function loadSongsAndPlaylists() {
                 if (typeof Gurasuraisu === 'undefined') return;
                 this.render();
                 Gurasuraisu.onRemoteAction((id, value) => this.handleAction(id, value));
+                // Handle re-launch requests from remote
+                Gurasuraisu.onRequestRemoteUI(() => this.render());
             },
 
             // Send only partial updates for frequently changing data
@@ -8025,7 +8027,7 @@ async function loadSongsAndPlaylists() {
                         { type: 'button', id: 'nav_np', icon: 'play_circle', style: this.currentView === 'nowPlaying' ? 'filled' : 'tonal' },
                         { type: 'button', id: 'nav_queue', icon: 'queue_music', style: this.currentView === 'queue' ? 'filled' : 'tonal' },
                         { type: 'button', id: 'nav_lib', icon: 'library_music', style: this.currentView.startsWith('library') ? 'filled' : 'tonal' },
-                        { type: 'button', id: 'nav_sc', icon: 'cloud', style: this.currentView.startsWith('sc') ? 'filled' : 'tonal' }
+                        { type: 'button', id: 'nav_sc', icon: 'podcasts', style: this.currentView.startsWith('sc') ? 'filled' : 'tonal' }
                     ]
                 });
 
