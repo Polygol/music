@@ -134,9 +134,22 @@
             filter: brightness(1.5);
         }
         #bottom-miniplayer.hidden {
-            bottom: -100px;
+            bottom: 0;
             opacity: 0;
             pointer-events: none;
+            width: 50%;
+            max-width: 50%;
+            height: 50%;
+            backdrop-filter: none;
+            background-color: transparent !important;
+            filter: blur(5px);
+            transform: translateX(-50%);
+            transition: all 0.5s cubic-bezier(.3, 1.2, .64, 1);
+        }
+        #bottom-miniplayer.hidden .miniplayer-info, #bottom-miniplayer.hidden .miniplayer-controls {
+            transform: scale(0);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(.3, 1.2, .64, 1);
         }
         #miniplayer-art {
             width: 48px;
@@ -145,6 +158,7 @@
             corner-shape: superellipse(1.5);
             box-shadow: 0 0 0 1px var(--glass-border);
             flex-shrink: 0;
+            transition: all 0.5s cubic-bezier(.3, 1.2, .64, 1);
         }
         .miniplayer-info {
             display: flex;
@@ -153,6 +167,7 @@
             flex-grow: 1;
             min-width: 0;
             color: var(--text-color);
+            transition: all 0.3s cubic-bezier(.3, 1.2, .64, 1);
         }
         #miniplayer-title, #miniplayer-artist {
             white-space: nowrap;
@@ -162,7 +177,7 @@
         #miniplayer-title { font-weight: bold; font-size: 16px; font-family: 'Open Runde'; }
         #miniplayer-artist { font-size: 16px; color: var(--secondary-text-color); }
 
-        .miniplayer-controls { display: flex; align-items: center; gap: 4px; padding-right: 8px; }
+        .miniplayer-controls { display: flex; align-items: center; gap: 4px; padding-right: 8px; transition: all 0.3s cubic-bezier(.3, 1.2, .64, 1); }
         .mini-control-btn {
             background: none;
             border: none;
