@@ -137,9 +137,9 @@
             bottom: 0;
             opacity: 0;
             pointer-events: none;
-            width: 50%;
-            max-width: 50%;
-            height: 50%;
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
             backdrop-filter: none;
             background-color: transparent !important;
             filter: blur(5px);
@@ -159,6 +159,12 @@
             box-shadow: 0 0 0 1px var(--glass-border);
             flex-shrink: 0;
             transition: all 0.5s cubic-bezier(.3, 1.2, .64, 1);
+        }
+        #bottom-miniplayer.hidden #miniplayer-art {
+            width: 10%;
+            height: 10%;
+            filter: blur(10px) saturate(4);
+            transform: scale(10) translateX(45%);
         }
         .miniplayer-info {
             display: flex;
@@ -202,7 +208,7 @@
 
         /* Responsive miniplayer */
         #miniplayer-prev-btn, #miniplayer-next-btn { display: none; }
-        @media (min-width: 500px) {
+        @media (min-width: 250px) {
             #miniplayer-prev-btn, #miniplayer-next-btn { display: flex; }
         }
 
