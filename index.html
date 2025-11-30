@@ -4282,28 +4282,23 @@ async function renderHomePage() {
     });
 
     const [topSongs, history] = await Promise.all([topSongsPromise, historyPromise]);
-    // --- 2. Select 4 unique songs for the highlights ---
+    // --- 2. Select 6 unique songs for the highlights ---
     
     const highlightSongs = new Set();
     const listenAgainSongs = [];
     if (topSongs.length > 0) {
         listenAgainIndex = (listenAgainIndex + 1) % Math.min(topSongs.length, 10);
         localStorage.setItem('listenAgainIndex', listenAgainIndex);
-        listenAgainSongs.push(topSongs[listenAgainIndex]);
-        if (topSongs.length > 1) {
-            listenAgainSongs.push(topSongs[(listenAgainIndex + 1) % topSongs.length]);
-        }
-        if (topSongs.length > 2) {
-            listenAgainSongs.push(topSongs[(listenAgainIndex + 2) % topSongs.length]);
-        }
-        if (topSongs.length > 3) {
-            listenAgainSongs.push(topSongs[(listenAgainIndex + 3) % topSongs.length]);
+    
+        // Add 6 listen-again songs (or fewer if there aren't enough top songs)
+        for (let i = 0; i < 6 && i < topSongs.length; i++) {
+            listenAgainSongs.push(topSongs[(listenAgainIndex + i) % topSongs.length]);
         }
     }
     listenAgainSongs.forEach(s => highlightSongs.add(s));
 
     const recommendations = songs.filter(s => !listenAgainSongs.some(ls => ls.id === s.id));
-    for (let i = 0; i < 4 && recommendations.length > 0; i++) {
+    for (let i = 0; i < 6 && recommendations.length > 0; i++) {
         const randomIndex = Math.floor(Math.random() * recommendations.length);
         highlightSongs.add(recommendations.splice(randomIndex, 1)[0]);
     }
