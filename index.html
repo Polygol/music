@@ -198,7 +198,7 @@
             position: absolute;
             bottom: 0;
             left: 4.5%;
-            max-width: 92%;
+            max-width: 90.5%;
             height: 2px;
             background-color: var(--secondary-text-color);
             width: 0%; /* JS will control this */
@@ -7040,7 +7040,7 @@ audioPlayer.addEventListener('timeupdate', async () => {
         const duration = song.duration || audioPlayer.duration;
         const percentage = (audioPlayer.currentTime / duration) * 100;
         progress.style.width = `${percentage}%`;
-        const scaledPercentage = (percentage / 100) * 92;
+        const scaledPercentage = (percentage / 100) * 90.5;
         miniplayerProgress.style.width = `${scaledPercentage}%`;
         updateTimeDisplays(audioPlayer.currentTime, audioPlayer.duration);
         updatePageTitle();
