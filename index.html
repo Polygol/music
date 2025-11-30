@@ -7995,6 +7995,8 @@ async function loadSongsAndPlaylists() {
         const RemoteInterface = {
             currentView: 'nowPlaying',
             lastSearchQuery: '',
+            librarySearchQuery: '',
+            listOffsets: {},
 
             init: function() {
                 if (typeof Gurasuraisu === 'undefined') return;
@@ -8027,7 +8029,8 @@ async function loadSongsAndPlaylists() {
                         { type: 'button', id: 'nav_np', icon: 'play_circle', style: this.currentView === 'nowPlaying' ? 'filled' : 'tonal' },
                         { type: 'button', id: 'nav_queue', icon: 'queue_music', style: this.currentView === 'queue' ? 'filled' : 'tonal' },
                         { type: 'button', id: 'nav_lib', icon: 'newsstand', style: this.currentView.startsWith('library') ? 'filled' : 'tonal' },
-                        { type: 'button', id: 'nav_sc', icon: 'podcasts', style: this.currentView.startsWith('sc') ? 'filled' : 'tonal' }
+                        { type: 'button', id: 'nav_sc', icon: 'podcasts', style: this.currentView.startsWith('sc') ? 'filled' : 'tonal' },
+                        { type: 'button', id: 'nav_search', icon: 'search', style: this.currentView === 'library_search' ? 'filled' : 'tonal' },
                     ]
                 });
 
@@ -8072,26 +8075,71 @@ async function loadSongsAndPlaylists() {
                     ]});
                 }
                 else if (this.currentView === 'library_albums') {
-                    const albums = groupSongsByAlbum(songs).slice(0, 50);
-                    const items = albums.map(a => ({ id: `play_alb_${a.originalAlbumArtist}::${a.originalAlbum}`, title: a.name, subtitle: a.artist, image: a.albumArt }));
+                    const albums = groupSongsByAlbum(songs);
+                    const offset = this.listOffsets.library_albums || 0;
+                    const itemsToShow = albums.slice(0, offset + 20);
+                    const items = itemsToShow.map(a => ({ id: `play_alb_${a.originalAlbumArtist}::${a.originalAlbum}`, title: a.name, subtitle: a.artist, image: a.albumArt }));
                     ui.push({ type: 'list', items });
+    
+                    if (albums.length > itemsToShow.length) {
+                        ui.push({ type: 'button', id: 'more_library_albums', label: 'Show More', style: 'tonal' });
+                    }
                 }
                 else if (this.currentView === 'library_artists') {
                     const artistsMap = new Map();
                     songs.forEach(s => { if (!artistsMap.has(s.artist)) artistsMap.set(s.artist, s.albumArt); });
-                    const items = Array.from(artistsMap).slice(0, 50).map(([artist, art]) => ({ id: `filter_artist_${artist}`, title: artist, subtitle: 'Artist', image: art }));
+                    const allArtists = Array.from(artistsMap);
+                    const offset = this.listOffsets.library_artists || 0;
+                    const artistsToShow = allArtists.slice(0, offset + 20);
+                    const items = artistsToShow.map(([artist, art]) => ({ id: `filter_artist_${artist}`, title: artist, subtitle: 'Artist', image: art }));
                     ui.push({ type: 'list', items });
+    
+                    if (allArtists.length > artistsToShow.length) {
+                        ui.push({ type: 'button', id: 'more_library_artists', label: 'Show More', style: 'tonal' });
+                    }
                 }
                 else if (this.currentView === 'library_songs') {
-                    const items = songs.slice(0, 50).map(s => ({ id: `play_song_${s.id}`, title: s.name, subtitle: s.artist, image: s.albumArt }));
+                    const offset = this.listOffsets.library_songs || 0;
+                    const songsToShow = songs.slice(0, offset + 20);
+                    const items = songsToShow.map(s => ({ id: `play_song_${s.id}`, title: s.name, subtitle: s.artist, image: s.albumArt }));
                     ui.push({ type: 'list', items });
+    
+                    if (songs.length > songsToShow.length) {
+                        ui.push({ type: 'button', id: 'more_library_songs', label: 'Show More', style: 'tonal' });
+                    }
+                }
+                else if (this.currentView === 'library_search') {
+                    ui.push({ type: 'input', id: 'library_input', placeholder: 'Search your owned music', value: this.librarySearchQuery });
+                    ui.push({ type: 'row', components: [{ type: 'button', id: 'library_go', label: 'Search', icon: 'search', style: 'filled' }] });
+                    
+                    if (this.librarySearchQuery) {
+                        const results = songs.filter(s => 
+                            s.name.toLowerCase().includes(this.librarySearchQuery.toLowerCase()) ||
+                            s.artist.toLowerCase().includes(this.librarySearchQuery.toLowerCase()) ||
+                            s.album.toLowerCase().includes(this.librarySearchQuery.toLowerCase())
+                        );
+                        const offset = this.listOffsets.library_search || 0;
+                        const itemsToShow = results.slice(0, offset + 20);
+                        const items = itemsToShow.map(s => ({ id: `play_song_${s.id}`, title: s.name, subtitle: s.artist, image: s.albumArt }));
+                        ui.push({ type: 'list', items });
+    
+                        if (results.length > itemsToShow.length) {
+                            ui.push({ type: 'button', id: 'more_library_search', label: 'Show More', style: 'tonal' });
+                        }
+                    }
                 }
                 else if (this.currentView === 'sc_search') {
                     ui.push({ type: 'input', id: 'sc_input', placeholder: 'Search SoundCloud', value: this.lastSearchQuery });
                     ui.push({ type: 'row', components: [{ type: 'button', id: 'sc_go', label: 'Search', icon: 'search', style: 'filled' }] });
                     if (lastSoundcloudSearchResults.length > 0) {
-                        const items = lastSoundcloudSearchResults.slice(0, 20).map(t => ({ id: `play_sc_${t.id}`, title: t.title, subtitle: t.user.username, image: t.artwork_url }));
+                        const offset = this.listOffsets.sc_search || 0;
+                        const itemsToShow = lastSoundcloudSearchResults.slice(0, offset + 20);
+                        const items = itemsToShow.map(t => ({ id: `play_sc_${t.id}`, title: t.title, subtitle: t.user.username, image: t.artwork_url }));
                         ui.push({ type: 'list', items });
+    
+                        if (lastSoundcloudSearchResults.length > itemsToShow.length) {
+                             ui.push({ type: 'button', id: 'more_sc_search', label: 'Show More', style: 'tonal' });
+                        }
                     }
                 }
 
@@ -8100,11 +8148,22 @@ async function loadSongsAndPlaylists() {
 
             handleAction: function(id, value) {
                 if (id.startsWith('nav_')) {
-                    this.currentView = id.replace('nav_', '');
-                    // Fix for Now Playing navigation mapping
-                    if (this.currentView === 'np') this.currentView = 'nowPlaying';
-                    if (this.currentView === 'lib') this.currentView = 'library';
-                    if (this.currentView === 'sc') this.currentView = 'sc_search';
+                    const oldViewFamily = this.currentView.split('_')[0];
+                    let newView = id.replace('nav_', '');
+
+                    // Map nav IDs to view IDs
+                    if (newView === 'np') newView  = 'nowPlaying';
+                    if (newView === 'lib') newView  = 'library';
+                    if (newView === 'sc') newView  = 'sc_search';
+                    if (newView === 'search') newView = 'library_search';
+    
+                    const newViewFamily = newView.split('_')[0];
+    
+                    if (oldViewFamily !== newViewFamily) {
+                        this.listOffsets = {}; // Reset offsets when changing main sections
+                    }
+                    
+                    this.currentView = newView;
                 }
                 else if (id === 'cmd_play') playPauseBtn.click();
                 else if (id === 'cmd_next') nextBtn.click();
@@ -8112,9 +8171,17 @@ async function loadSongsAndPlaylists() {
                 else if (id === 'cmd_shuffle') toggleShuffle();
                 else if (id === 'cmd_repeat') toggleRepeat();
                 else if (id === 'cmd_seek') { if (audioPlayer.duration) audioPlayer.currentTime = (value / 100) * audioPlayer.duration; }
+                else if (id.startsWith('more_')) {
+                    const view = id.replace('more_', '');
+                    this.listOffsets[view] = (this.listOffsets[view] || 0) + 20;
+                }
                 else if (id.startsWith('q_')) playSong(playQueue[parseInt(id.split('_')[1])], null);
                 
                 // Library Browsing Handlers
+                else if (id === 'library_input') this.librarySearchQuery = value;
+                else if (id === 'library_go') {
+                    this.listOffsets.library_search = 0; // Reset offset on new search
+                }
                 else if (id === 'view_albums') this.currentView = 'library_albums';
                 else if (id === 'view_artists') this.currentView = 'library_artists';
                 else if (id === 'view_songs') this.currentView = 'library_songs';
