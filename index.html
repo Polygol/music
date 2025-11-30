@@ -8002,6 +8002,16 @@ async function loadSongsAndPlaylists() {
                 Gurasuraisu.onRemoteAction((id, value) => this.handleAction(id, value));
             },
 
+            // Send only partial updates for frequently changing data
+            updateProgress: function() {
+                const duration = audioPlayer.duration || 1;
+                Gurasuraisu.sendRemoteUpdate({
+                    'cmd_seek': (audioPlayer.currentTime / duration) * 100,
+                    'lbl_time_current': formatTime(audioPlayer.currentTime),
+                    'lbl_time_total': formatTime(duration)
+                });
+            },
+
             render: function() {
                 let ui = [];
                 
@@ -8018,8 +8028,12 @@ async function loadSongsAndPlaylists() {
 
                 if (this.currentView === 'nowPlaying') {
                     const song = currentlyPlayingSong || { name: 'No Song Playing', artist: 'Select music to start', albumArt: '' };
-                    ui.push({ type: 'text', content: song.name, size: 'large' });
-                    ui.push({ type: 'text', content: song.artist, size: 'medium' });
+                    
+                    // Album Art
+                    ui.push({ type: 'image', id: 'np_art', src: song.albumArt, width: '250px', height: '250px', style: 'rounded' });
+
+                    ui.push({ type: 'text', id: 'np_title', content: song.name, size: 'large' });
+                    ui.push({ type: 'text', id: 'np_artist', content: song.artist, size: 'medium' });
                     
                     ui.push({ type: 'row', components: [
                         { type: 'button', id: 'cmd_prev', icon: 'skip_previous', style: 'tonal' },
@@ -8032,7 +8046,14 @@ async function loadSongsAndPlaylists() {
                         { type: 'button', id: 'cmd_repeat', icon: repeatMode === 'one' ? 'repeat_one' : 'repeat', style: repeatMode !== 'none' ? 'filled' : 'outlined' }
                     ]});
                     
+                    // Progress Bar
                     ui.push({ type: 'slider', id: 'cmd_seek', value: (audioPlayer.currentTime / (audioPlayer.duration || 1)) * 100, min: 0, max: 100, icon: 'timer' });
+                    
+                    // Time Labels
+                    ui.push({ type: 'row', components: [
+                        { type: 'text', id: 'lbl_time_current', content: formatTime(audioPlayer.currentTime) },
+                        { type: 'text', id: 'lbl_time_total', content: formatTime(audioPlayer.duration || 0) }
+                    ]});
                 } 
                 else if (this.currentView === 'queue') {
                     const items = playQueue.map((s, i) => ({ id: `q_${i}`, title: s.name, subtitle: s.artist, image: s.albumArt }));
@@ -8046,8 +8067,18 @@ async function loadSongsAndPlaylists() {
                     ]});
                 }
                 else if (this.currentView === 'library_albums') {
-                    const albums = groupSongsByAlbum(songs).slice(0, 50); // Limit for performance
+                    const albums = groupSongsByAlbum(songs).slice(0, 50);
                     const items = albums.map(a => ({ id: `play_alb_${a.originalAlbumArtist}::${a.originalAlbum}`, title: a.name, subtitle: a.artist, image: a.albumArt }));
+                    ui.push({ type: 'list', items });
+                }
+                else if (this.currentView === 'library_artists') {
+                    const artistsMap = new Map();
+                    songs.forEach(s => { if (!artistsMap.has(s.artist)) artistsMap.set(s.artist, s.albumArt); });
+                    const items = Array.from(artistsMap).slice(0, 50).map(([artist, art]) => ({ id: `filter_artist_${artist}`, title: artist, subtitle: 'Artist', image: art }));
+                    ui.push({ type: 'list', items });
+                }
+                else if (this.currentView === 'library_songs') {
+                    const items = songs.slice(0, 50).map(s => ({ id: `play_song_${s.id}`, title: s.name, subtitle: s.artist, image: s.albumArt }));
                     ui.push({ type: 'list', items });
                 }
                 else if (this.currentView === 'sc_search') {
@@ -8075,13 +8106,32 @@ async function loadSongsAndPlaylists() {
                 else if (id === 'cmd_repeat') toggleRepeat();
                 else if (id === 'cmd_seek') { if (audioPlayer.duration) audioPlayer.currentTime = (value / 100) * audioPlayer.duration; }
                 else if (id.startsWith('q_')) playSong(playQueue[parseInt(id.split('_')[1])], null);
+                
+                // Library Browsing Handlers
                 else if (id === 'view_albums') this.currentView = 'library_albums';
+                else if (id === 'view_artists') this.currentView = 'library_artists';
+                else if (id === 'view_songs') this.currentView = 'library_songs';
+                
                 else if (id.startsWith('play_alb_')) {
                     const [artist, album] = id.replace('play_alb_', '').split('::');
                     const ctx = songs.filter(s => s.albumArtist === artist && s.album === album);
                     if (ctx.length) playSong(ctx[0], ctx);
                     this.currentView = 'nowPlaying';
                 }
+                else if (id.startsWith('filter_artist_')) {
+                    const artist = id.replace('filter_artist_', '');
+                    const ctx = songs.filter(s => s.artist === artist);
+                    if (ctx.length) playSong(ctx[0], ctx);
+                    this.currentView = 'nowPlaying';
+                }
+                else if (id.startsWith('play_song_')) {
+                    const songId = parseFloat(id.replace('play_song_', ''));
+                    const song = songs.find(s => s.id === songId);
+                    if (song) playSong(song, songs); // Play with full library context
+                    this.currentView = 'nowPlaying';
+                }
+
+                // SoundCloud Handlers
                 else if (id === 'sc_input') this.lastSearchQuery = value;
                 else if (id === 'sc_go') {
                     document.getElementById('soundcloudSearchInput').value = this.lastSearchQuery;
@@ -8102,7 +8152,6 @@ async function loadSongsAndPlaylists() {
             },
             
             onTrackChange: function() {
-                // Auto-switch to Now Playing view on remote when a track starts, if we aren't deep in browsing
                 if (this.currentView === 'queue' || this.currentView === 'nowPlaying') {
                     this.currentView = 'nowPlaying';
                     this.render();
@@ -8115,8 +8164,11 @@ async function loadSongsAndPlaylists() {
         playSong = async function(song, context) {
             await originalPlaySong(song, context);
             RemoteInterface.onTrackChange();
-            RemoteInterface.render();
         };
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            RemoteInterface.updateProgress();
+        });
 
         // Initialize
         window.addEventListener('load', () => {
