@@ -2824,6 +2824,7 @@ function resetPlayer() {
     currentSongId = null;
     currentlyPlayingSong = null; // Clear the currently playing song object
     updateMiniplayerUI(null);
+    document.querySelector('.library-controls').style.bottom = '25px !important'; 
     playQueue = [];
     currentQueueIndex = -1;
 
