@@ -5621,11 +5621,13 @@ function updateMiniplayerUI(song, state) {
     // If we are on the Now Playing screen, the miniplayer should ALWAYS be hidden.
     if (activeView === 'now-playing') {
         miniplayer.classList.add('hidden');
+        document.querySelector('.library-controls').style.bottom = '25px !important'; 
         return;
     }
 
     if (!song || !currentSongId) {
         miniplayer.classList.add('hidden');
+        document.querySelector('.library-controls').style.bottom = '25px !important'; 
         return;
     }
 
