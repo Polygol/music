@@ -2824,7 +2824,7 @@ function resetPlayer() {
     currentSongId = null;
     currentlyPlayingSong = null; // Clear the currently playing song object
     updateMiniplayerUI(null);
-    document.querySelector('.library-controls').style.bottom = '25px !important'; 
+    document.querySelectorAll('.library-controls').forEach(el => el.style.bottom = '25px');
     playQueue = [];
     currentQueueIndex = -1;
 
@@ -5627,7 +5627,7 @@ function updateMiniplayerUI(song, state) {
 
     if (!song || !currentSongId) {
         miniplayer.classList.add('hidden');
-        document.querySelector('.library-controls').style.bottom = '25px !important'; 
+        document.querySelectorAll('.library-controls').forEach(el => el.style.bottom = '25px');
         return;
     }
 
@@ -5635,7 +5635,7 @@ function updateMiniplayerUI(song, state) {
     miniplayerArt.src = song.albumArt;
     miniplayerTitle.textContent = sanitize(song.name);
     miniplayerArtist.textContent = sanitize(song.artist);
-    document.querySelector('.library-controls').style.bottom = ''; 
+    document.querySelectorAll('.library-controls').forEach(el => el.style.bottom = ''); 
     miniplayerPlayBtn.innerHTML = `<span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;">${state === 'playing' ? 'pause' : 'play_arrow'}</span>`;
 }
         
