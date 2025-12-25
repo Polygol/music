@@ -2199,6 +2199,36 @@
         </div>
     </div>
 
+    <!-- Import Chooser Modal -->
+    <div id="addMusicModal" class="modal-overlay">
+        <div style="background: var(--modal-background); padding: 25px; border-radius: 50px; corner-shape: superellipse(1.5); width: 90%; max-width: 400px; backdrop-filter: var(--edge-refraction-filter) saturate(2) blur(5px); border: 1px solid var(--glass-border);">
+            <h2 style="margin-bottom: 20px;">Add Music</h2>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <button id="addFolderBtn" class="filter-btn" style="text-align: left; padding: 15px;">
+                    <span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 10px;">folder_open</span>
+                    Add Local Folder
+                </button>
+                <button id="addFilesBtn" class="filter-btn" style="text-align: left; padding: 15px;">
+                    <span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 10px;">audio_file</span>
+                    Add Local Files
+                </button>
+                
+                <div class="menu-separator"></div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="urlInput" placeholder="https://example.com/song.mp3" class="search-input" style="padding-left: 15px;">
+                    <button id="addUrlBtn" class="filter-btn active">Add</button>
+                </div>
+                <p style="font-size: 12px; opacity: 0.7; margin-top: 5px;">Supports direct audio links (MP3, WAV, FLAC).</p>
+            </div>
+    
+            <div style="display: flex; justify-content: flex-end; margin-top: 25px;">
+                <button id="closeAddModal" class="filter-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Edit Song Modal -->
     <div id="editModal" class="modal-overlay">
         <div id="editModalContent" style="background: var(--modal-background); padding: 25px; border-radius: 50px; corner-shape: superellipse(1.5); width: 90%; max-width: 400px; backdrop-filter: var(--edge-refraction-filter) saturate(2) blur(5px); border: 1px solid var(--glass-border);">
@@ -2416,6 +2446,7 @@
         let playlistModal, sleepTimerModal;
         let currentSortMode = 'dateAdded'; // 'dateAdded', 'alpha'
         let activeAlbum = null; // Will store { artist, name } of the selected album
+        let addMusicModal; // Variable for the new modal
 
         // --- SoundCloud variables ---
         let soundcloudClientId = '';
@@ -5751,6 +5782,82 @@ function initModalVariables() {
     manualLyricsSearchModal = document.getElementById('manualLyricsSearchModal');
     document.getElementById('manualLyricsSearchBtn').addEventListener('click', searchLrclibForManualPick);
     document.getElementById('closeManualLyricsModal').addEventListener('click', () => closeModal(manualLyricsSearchModal));
+
+    // Add Music Modal Init
+    addMusicModal = document.getElementById('addMusicModal');
+    document.getElementById('closeAddModal').addEventListener('click', () => closeModal(addMusicModal));
+    
+    // 1. Folder Picker (Directory Access API)
+    document.getElementById('addFolderBtn').addEventListener('click', async () => {
+        closeModal(addMusicModal);
+        if ('showDirectoryPicker' in window) {
+            try {
+                const handle = await window.showDirectoryPicker();
+                // ... (existing directory handle logic) ...
+                for (const existingHandle of directoryHandles) {
+                    if (await handle.isSameEntry(existingHandle)) {
+                        Gurasuraisu.showPopup("This folder has already been added");
+                        return;
+                    }
+                }
+                if (await verifyPermission(handle, true)) {
+                    directoryHandles.push(handle);
+                    const tx = db.transaction('config', 'readwrite');
+                    tx.objectStore('config').put({ key: 'directoryHandles', value: directoryHandles });
+                    await tx.done;
+                    await processDirectory(handle);
+                }
+            } catch (err) {
+                if (err.name !== 'AbortError') console.error('Error picking directory:', err);
+            }
+        } else {
+            Gurasuraisu.showAlert("Folder access is not supported in this browser/mode.");
+        }
+    });
+
+    // 2. Native File Picker
+    document.getElementById('addFilesBtn').addEventListener('click', () => {
+        closeModal(addMusicModal);
+        document.getElementById('musicUpload').click(); // Trigger the hidden input
+    });
+
+    // 3. URL Import
+    document.getElementById('addUrlBtn').addEventListener('click', async () => {
+        const url = document.getElementById('urlInput').value.trim();
+        if (!url) return;
+        
+        const btn = document.getElementById('addUrlBtn');
+        const originalText = btn.textContent;
+        btn.textContent = '...';
+        btn.disabled = true;
+
+        try {
+            // Use the proxy if configured
+            const fetchUrl = isCorsProxyEnabled ? proxyUrl(url) : url;
+            const response = await fetch(fetchUrl);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            const blob = await response.blob();
+            
+            // Extract filename from URL
+            let filename = url.split('/').pop().split('#')[0].split('?')[0];
+            if (!filename || !filename.includes('.')) filename = `downloaded_song_${Date.now()}.mp3`;
+            
+            // Create a File object
+            const file = new File([blob], filename, { type: blob.type || 'audio/mpeg' });
+            
+            await addSongs([file], 'indexeddb');
+            Gurasuraisu.showPopup("Song added from URL");
+            document.getElementById('urlInput').value = '';
+            closeModal(addMusicModal);
+        } catch (e) {
+            console.error("URL Import failed", e);
+            Gurasuraisu.showAlert("Failed to import from URL. Check CORS settings or URL validity.");
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    });
 }
 
 function openManageFoldersModal() {
@@ -7427,29 +7534,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        document.getElementById('uploadBtn').addEventListener('click', async () => {
-            if ('showDirectoryPicker' in window) {
-                try {
-                    const handle = await window.showDirectoryPicker();
-                    if (await verifyPermission(handle, true)) {
-                        directoryHandles.push(handle);
-                        const tx = db.transaction('config', 'readwrite');
-                        tx.objectStore('config').put({ key: 'directoryHandles', value: directoryHandles });
-                        await tx.done;
-                        await processDirectory(handle);
-                    }
-                } catch (err) {
-                    if (err.name !== 'AbortError') console.error('Error picking directory:', err);
-                }
-            } else {
-                musicUploadInput.click();
-            }
-        });
-
-        musicUploadInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) addSongs(e.target.files, 'indexeddb');
-        });
-        
         document.querySelectorAll('.filter-container .filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelector('.filter-container .filter-btn.active').classList.remove('active');
@@ -7829,32 +7913,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Call the AI initializer on page load
 initializeMusicAi();
 
-document.getElementById('uploadBtn').addEventListener('click', async () => {
-    if ('showDirectoryPicker' in window) {
-        try {
-            const handle = await window.showDirectoryPicker();
-            
-            for (const existingHandle of directoryHandles) {
-                if (await handle.isSameEntry(existingHandle)) {
-                    Gurasuraisu.showPopup("This folder has already been added");
-                    return;
-                }
-            }
-
-            if (await verifyPermission(handle, true)) {
-                directoryHandles.push(handle);
-                const tx = db.transaction('config', 'readwrite');
-                tx.objectStore('config').put({ key: 'directoryHandles', value: directoryHandles });
-                await tx.done;
-                await processDirectory(handle);
-            }
-        } catch (err) {
-            if (err.name !== 'AbortError') console.error('Error picking directory:', err);
-        }
-    } else {
-        document.getElementById('musicUpload').click();
-    }
-});
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            openModal(addMusicModal);
+        });
 
         musicUpload.addEventListener('change', (e) => {
             if (e.target.files.length > 0) addSongs(e.target.files, 'indexeddb');
