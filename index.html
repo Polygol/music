@@ -261,8 +261,8 @@
             margin-bottom: 20px;
         }
         .item-card:active {
-            transform: scale(0.96);
-            transition: all 0.1s cubic-bezier(0.2, 0, 0.38, 0.9);
+            transform: scale(1.1);
+            transition: transform 0.3s cubic-bezier(.2, 1.3, .64, 1), filter 0.3s cubic-bezier(.2, 1.3, .64, 1);
             filter: brightness(1.5);
         }
 
@@ -1152,30 +1152,6 @@
             font-size: 14px;
         }
         
-        /* For all clickable elements */
-        [onclick], 
-        button, 
-        a, 
-        input[type="button"], 
-        input[type="submit"],
-        .clickable {
-          cursor: pointer;
-          transform: scale(1);
-          transition: all 0.15s cubic-bezier(0.2, 0, 0.38, 0.9);
-        }
-        
-        /* Active effect (when clicking down) */
-        [onclick]:active, 
-        button:active, 
-        a:active, 
-        input[type="button"]:active, 
-        input[type="submit"]:active,
-        .clickable:active {
-          transform: scale(0.96);
-          transition: all 0.1s cubic-bezier(0.2, 0, 0.38, 0.9);
-          filter: brightness(1.5);
-        }
-
         @media (min-width: 560px) {
             .controls-container {
                 position: fixed;
@@ -1388,7 +1364,7 @@
 
         .lyrics-container p.active {
             background: var(--search-background);
-            scale: 0.96;
+            scale: 1.1;
         }
  
         .queue-item .song-info {
@@ -1824,8 +1800,8 @@
             backdrop-filter: var(--edge-refraction-filter) saturate(0) blur(2.5px);
         }
         .highlight-card:active {
-            transform: scale(0.96);
-            transition: all 0.1s cubic-bezier(0.2, 0, 0.38, 0.9);
+            transform: scale(1.1);
+            transition: transform 0.3s cubic-bezier(.2, 1.3, .64, 1), filter 0.3s cubic-bezier(.2, 1.3, .64, 1);
             filter: brightness(1.5);
         }
         .highlight-card img {
