@@ -12,60 +12,6 @@
     <script src="/assets/gurapp/api/gurasuraisu-api.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root {
-            --edge-refraction-filter: url('#edge-refraction-only');
-            --sun-shadow: 0 0 0 0 transparent;
-            
-            /* Dark Theme (Default) Variables */
-            --background-color-dark: #1c1c1c;
-            --background-color-dark-tr: rgba(28, 28, 28, 0.7);
-            --text-color-dark: #f9f9f9;
-            --secondary-text-color-dark: rgba(255, 255, 255, 0.7);
-            --modal-background-dark: rgba(51, 51, 51, 0.8);
-            --modal-transparent-dark: rgba(51, 51, 51, 0.7);
-            --search-background-dark: rgba(51, 51, 51, 0.5);
-            --dark-overlay: rgba(51, 51, 51, 0.2);
-            --dark-transparent: rgba(255, 255, 255, 0.1); 
-            --glass-border-dark: rgba(100, 100, 100, 0.2);
-            
-            /* Light Theme Variables */
-            --background-color-light: #f0f0f0;
-        	--background-color-light-tr: rgba(240, 240, 240, 0.7);
-            --text-color-light: #333333;
-            --secondary-text-color-light: rgba(0, 0, 0, 0.7);
-            --modal-background-light: rgba(220, 220, 220, 0.8);
-            --modal-transparent-light: rgba(240, 240, 240, 0.7);
-            --search-background-light: rgba(220, 220, 220, 0.5);
-            --light-overlay: rgba(220, 220, 220, 0.2);
-            --light-transparent: rgba(255, 255, 255, 0.1);
-            --glass-border-light: rgba(200, 200, 200, 0.2);
-            
-            /* Default to Dark Theme */
-            --background-color: var(--background-color-dark);
-            --background-color-tr: var(--background-color-dark-tr);
-            --text-color: var(--text-color-dark);
-            --secondary-text-color: var(--secondary-text-color-dark);
-            --modal-background: var(--modal-background-dark);
-            --modal-transparent: var(--modal-transparent-dark);
-            --search-background: var(--search-background-dark);
-            --overlay-color: var(--dark-overlay);
-            --transparent-color: var(--dark-transparent);
-            --glass-border: var(--glass-border-dark);
-        }
-        
-        body.light-theme {
-            --background-color: var(--background-color-light);
-            --background-color-tr: var(--background-color-light-tr);
-            --text-color: var(--text-color-light);
-            --secondary-text-color: var(--secondary-text-color-light);
-            --modal-background: var(--modal-background-light);
-            --modal-transparent: var(--modal-transparent-light);
-            --search-background: var(--search-background-light);
-            --overlay-color: var(--light-overlay);
-            --transparent-color: var(--light-transparent);
-            --glass-border: var(--glass-border-light);
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -93,10 +39,6 @@
             overflow-x: hidden;
             min-height: 0;
         }
-
-        .view-container::-webkit-scrollbar { width: 8px; }
-        .view-container::-webkit-scrollbar-track { background: transparent; }
-        .view-container::-webkit-scrollbar-thumb { background-color: var(--search-background); border-radius: 50px; }
 
         #now-playing-view {
             padding-top: 0;
@@ -396,25 +338,6 @@
             90% { opacity: 1; transform: translate(-50%, 0); }
             100% { opacity: 0; transform: translate(-50%, -20px); }
           }
-        
-        .music-list::-webkit-scrollbar,
-        #lyrics-queue-panel::-webkit-scrollbar,
-        .lyrics-container::-webkit-scrollbar {
-            width: 4px;
-        }
-                
-        .music-list::-webkit-scrollbar-track,
-        #lyrics-queue-panel::-webkit-scrollbar-track,
-        .lyrics-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, .0);
-        }
-        
-        .music-list::-webkit-scrollbar-thumb,
-        #lyrics-queue-panel::-webkit-scrollbar-thumb,
-        .lyrics-container::-webkit-scrollbar-thumb {
-            background: var(--modal-transparent);
-            border-radius: 4px;
-        } 
 
         #queue-list-container {
             gap: 10px;
@@ -1733,10 +1656,6 @@
             padding: 20px 20px 0 20px;
         }
         
-        .drawer-content::-webkit-scrollbar { width: 4px; }
-        .drawer-content::-webkit-scrollbar-track { background: transparent; }
-        .drawer-content::-webkit-scrollbar-thumb { background: var(--modal-transparent); border-radius: 4px; }
-        
         .drawer-header {
             padding: 40px 20px 10px 20px;
             text-align: center;
@@ -1862,43 +1781,6 @@
                 xChannelSelector="R" 
                 yChannelSelector="G"
             />
-        </filter>
-    </svg>
-
-    <svg style="display: none">
-        <filter id="edge-refraction-only" color-interpolation-filters="linearRGB">
-            <!-- Part 1: Generate the edge turbulence pattern -->
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="turbulence"></feTurbulence>
-            <feMorphology in="SourceGraphic" operator="erode" radius="4" result="eroded"></feMorphology>
-            <feComposite in="SourceGraphic" in2="eroded" operator="out" result="border_mask"></feComposite>
-            <feComposite in="turbulence" in2="border_mask" operator="in" result="edge_turbulence"></feComposite>
-    
-            <!-- Part 2: Create the two displacement passes -->
-            <feDisplacementMap in="SourceGraphic" in2="edge_turbulence" scale="15" xChannelSelector="R" yChannelSelector="G" result="disp_positive"></feDisplacementMap>
-            <feDisplacementMap in="SourceGraphic" in2="edge_turbulence" scale="-15" xChannelSelector="R" yChannelSelector="G" result="disp_negative"></feDisplacementMap>
-    
-            <!-- Part 3: Create masks to isolate the correct halves of each pass -->
-            <!-- Mask for the Top-Left Half -->
-            <feFlood flood-color="white" width="50%" height="50%" x="0" y="0" result="topLeftRect"></feFlood>
-            <!-- Mask for the Bottom-Right Half -->
-            <feFlood flood-color="white" width="50%" height="50%" x="50%" y="50%" result="bottomRightRect"></feFlood>
-    
-            <!-- Part 4: Apply the masks -->
-            <!-- Isolate the correctly refracted top-left from the positive pass -->
-            <feComposite in="disp_positive" in2="topLeftRect" operator="in" result="topLeft_part"></feComposite>
-            <!-- Isolate the correctly refracted bottom-right from the negative pass -->
-            <feComposite in="disp_negative" in2="bottomRightRect" operator="in" result="bottomRight_part"></feComposite>
-    
-            <!-- 
-               Part 5: Merge the perfectly isolated parts.
-               Because there is no overlap, 'lighten' works perfectly, but you could also use feMerge.
-            -->
-            <feBlend in="topLeft_part" in2="bottomRight_part" mode="lighten" result="blended_image"></feBlend>
-            
-            <!-- Part 6: Adjust final opacity -->
-            <feComponentTransfer in="blended_image">
-                <feFuncA type="linear" slope="0.95"></feFuncA>
-            </feComponentTransfer>
         </filter>
     </svg>
 
