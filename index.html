@@ -2004,7 +2004,7 @@
                 <small>You will need to disable CORS to use SoundCloud streaming. A browser extension may be required.</small>
 
                 <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <label for="corsProxyToggle">Use api.allorigins.win</label>
+                    <label for="corsProxyToggle">Use api.codetabs</label>
                     <input type="checkbox" id="corsProxyToggle">
                 </div>
                 <small>Redirects SoundCloud requests through a proxy. May be slower.</small>
@@ -5562,7 +5562,7 @@ function proxyUrl(url) {
         // This regex matches all relevant SoundCloud domains that need proxying.
         const soundcloudDomains = /(soundcloud\.com|sndcdn\.com|soundcloud\.cloud)/;
         if (soundcloudDomains.test(url)) {
-            return `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+            return `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`;
         }
     }
     return url;
