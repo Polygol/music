@@ -7138,10 +7138,9 @@ volumeSlider.addEventListener('input', (e) => {
 });
 
 window.addEventListener('GurasuraisuVolumeChange', (e) => {
-    const level = e.detail.level;
-    const volume = level / 100;
+    const volume = e.detail.muted ? 0 : e.detail.level;
     audioPlayer.volume = volume;
-    volumeSlider.value = level;
+    volumeSlider.value = volume * 100;
     if (volume === 0) volumeIcon.textContent = 'volume_mute';
     else if (volume < 0.5) volumeIcon.textContent = 'volume_down';
     else volumeIcon.textContent = 'volume_up';
