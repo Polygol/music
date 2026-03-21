@@ -7137,6 +7137,16 @@ volumeSlider.addEventListener('input', (e) => {
     else volumeIcon.textContent = 'volume_up';
 });
 
+window.addEventListener('GurasuraisuVolumeChange', (e) => {
+    const level = e.detail.level;
+    const volume = level / 100;
+    audioPlayer.volume = volume;
+    volumeSlider.value = level;
+    if (volume === 0) volumeIcon.textContent = 'volume_mute';
+    else if (volume < 0.5) volumeIcon.textContent = 'volume_down';
+    else volumeIcon.textContent = 'volume_up';
+});
+
 audioPlayer.addEventListener('pause', () => {
     const nowPlayingView = document.getElementById('now-playing-view');
     if(nowPlayingView) nowPlayingView.classList.add('paused');
