@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,700,1,0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="/assets/gurapp/api/gurasuraisu-api.js"></script>
+    <script src="./assets/gurapp/api/gurasuraisu-api.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
@@ -1772,7 +1772,7 @@
                 numOctaves="1" 
                 seed="0"
             />
-            <feGaussianBlur stdDeviation="30" result="blurredTurbulence"/>
+            <feGaussianBlur stdDeviation="30" result="blurredTurbulence"./>
             <feDisplacementMap 
                 id="displacement"
                 in="SourceGraphic" 
@@ -2685,7 +2685,7 @@ function resetPlayer() {
     isShuffleEnabled = false;
     updateShuffleButtonState();
 
-    const defaultImage = "/music/favicon.png";
+    const defaultImage = "./music/favicon.png";
     const defaultImageBig = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPgSURBVHhe7cEBAQAAAIIg/69uSEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACcqAFFFQAB8Dl/nAAAAABJRU5ErkJggg==";
 
     albumArtImg.src = defaultImageBig;
@@ -3067,7 +3067,7 @@ async function extractMetadata(file) {
                         if (typeof value === 'object' && value.no) {
                             return parseInt(value.no, 10);
                         }
-                        const parsed = parseInt(String(value).split('/')[0], 10);
+                        const parsed = parseInt(String(value).split('./')[0], 10);
                         return isNaN(parsed) ? null : parsed;
                     };
 
@@ -4307,7 +4307,7 @@ async function updateAiHomePagePrompts() {
             if (textResponse) {
                 // Parse a string like: "Prompt 1", "Prompt 2", "Prompt 3"
                 promptIdeas = textResponse.split(',') // Split by comma
-                                        .map(p => p.trim().replace(/"/g, '')) // Remove whitespace and quotes
+                                        .map(p => p.trim().replace(/"./g, '')) // Remove whitespace and quotes
                                         .filter(p => p.length > 5) // Filter out any empty strings
                                         .slice(0, 3);
             }
@@ -5663,7 +5663,7 @@ function initModalVariables() {
             const blob = await response.blob();
             
             // Extract filename from URL
-            let filename = url.split('/').pop().split('#')[0].split('?')[0];
+            let filename = url.split('./').pop().split('#')[0].split('?')[0];
             if (!filename || !filename.includes('.')) filename = `downloaded_song_${Date.now()}.mp3`;
             
             // Create a File object
@@ -6022,7 +6022,7 @@ async function processAndCacheSoundcloudTrack(songObject) {
             
             const mapLine = playlistText.split('\n').find(line => line.startsWith('#EXT-X-MAP:URI'));
             if (!mapLine) { console.warn(`No init segment for "${songObject.name}". Caching aborted.`); return null; }
-            const uriMatch = mapLine.match(/URI="([^"]+)"/);
+            const uriMatch = mapLine.match(/URI="([^"]+)"./);
             if (!uriMatch || !uriMatch[1]) throw new Error('Could not parse init segment URI.');
             
             const initSegmentUrl = new URL(uriMatch[1], streamUrl).href;

@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,700,1,0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
-    <script src="/assets/gurapp/api/gurasuraisu-api.js"></script>
+    <script src="./assets/gurapp/api/gurasuraisu-api.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -66,7 +66,7 @@
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 10.04 10.04"><circle cx="5.02" cy="5.02" r="4.52" style="fill:rgba(0,0,0,0.5);stroke:rgba(255,255,255,0.5);stroke-width:1"/></svg>') 10 10, auto !important;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 10.04 10.04"><circle cx="5.02" cy="5.02" r="4.52" style="fill:rgba(0,0,0,0.5);stroke:rgba(255,255,255,0.5);stroke-width:1"./></svg>') 10 10, auto !important;
         }
         
         body {
@@ -1878,7 +1878,7 @@
                 numOctaves="1" 
                 seed="0"
             />
-            <feGaussianBlur stdDeviation="30" result="blurredTurbulence"/>
+            <feGaussianBlur stdDeviation="30" result="blurredTurbulence"./>
             <feDisplacementMap 
                 id="displacement"
                 in="SourceGraphic" 
@@ -1893,26 +1893,26 @@
     <svg style="display: none">
         <filter id="edge-refraction-only" color-interpolation-filters="linearRGB">
             <!-- Part 1: Create the turbulence that will only be used at the edges -->
-            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" numOctaves="2" result="turbulence"/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" numOctaves="2" result="turbulence"./>
         
             <!-- Part 2: Create a mask that is only opaque at the edges -->
-            <feMorphology in="SourceGraphic" operator="erode" radius="4" result="eroded"/>
-            <feComposite in="SourceGraphic" in2="eroded" operator="out" result="border_mask"/>
-            <feComposite in="turbulence" in2="border_mask" operator="in" result="edge_turbulence"/>
+            <feMorphology in="SourceGraphic" operator="erode" radius="4" result="eroded"./>
+            <feComposite in="SourceGraphic" in2="eroded" operator="out" result="border_mask"./>
+            <feComposite in="turbulence" in2="border_mask" operator="in" result="edge_turbulence"./>
         
             <!-- Part 3: Create the final displacement map -->
             <!-- First, create the 50% gray neutral background -->
-            <feFlood flood-color="#808080" result="neutral_base"/>
+            <feFlood flood-color="#808080" result="neutral_base"./>
             
             <!-- Next, use feMerge to explicitly stack the edge turbulence ON TOP of the gray base.
                  This is the key step that prevents the center from shifting. -->
             <feMerge result="displacement_map">
-                <feMergeNode in="neutral_base"/>
-                <feMergeNode in="edge_turbulence"/>
+                <feMergeNode in="neutral_base"./>
+                <feMergeNode in="edge_turbulence"./>
             </feMerge>
         
             <!-- Part 4: Apply the final, perfectly centered displacement map -->
-            <feDisplacementMap in="SourceGraphic" in2="displacement_map" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+            <feDisplacementMap in="SourceGraphic" in2="displacement_map" scale="40" xChannelSelector="R" yChannelSelector="G"./>
         </filter>
     </svg>
 
@@ -2739,7 +2739,7 @@ function resetPlayer() {
     isShuffleEnabled = false;
     updateShuffleButtonState();
 
-    const defaultImage = "/music/favicon.png";
+    const defaultImage = "./music/favicon.png";
     const defaultImageBig = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPgSURBVHhe7cEBAQAAAIIg/69uSEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACcqAFFFQAB8Dl/nAAAAABJRU5ErkJggg==";
 
     albumArtImg.src = defaultImageBig;
@@ -3009,7 +3009,7 @@ async function extractMetadata(file) {
                         if (typeof value === 'object' && value.no) {
                             return parseInt(value.no, 10);
                         }
-                        const parsed = parseInt(String(value).split('/')[0], 10);
+                        const parsed = parseInt(String(value).split('./')[0], 10);
                         return isNaN(parsed) ? null : parsed;
                     };
 
