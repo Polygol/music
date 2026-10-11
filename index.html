@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,700,1,0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.jsdelivr.net/gh/Polygol/polygol.github.io@main/assets/gurapp/api/gurasuraisu-api.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Polygol/polygol.github.io@main/assets/polygolapp/api/polygol-api.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
@@ -931,7 +931,7 @@
             filter: blur(clamp(25px, 2.5vw, 100px)) saturate(3) brightness(1);
         }
 
-        html.gurasuraisu-high-contrast #distortion-container {
+        html.polygol-high-contrast #distortion-container {
             opacity: 0.2 !important; /* 20% opacity for high contrast */
         }
 
@@ -2698,11 +2698,11 @@ function resetPlayer() {
     updateTimeDisplays();
     playPauseIcon.textContent = 'play_arrow';
     playPauseBtn.classList.remove('playing');
-    Gurasuraisu.updatePlaybackState({ playbackState: 'paused' });
+    Polygol.updatePlaybackState({ playbackState: 'paused' });
     document.title = 'Music';
     updateFavicon(defaultImage);
 
-    Gurasuraisu.clearMediaSession();
+    Polygol.clearMediaSession();
 
     // Revoke any existing blob URL to prevent memory leaks
     if (currentMediaSessionArtBlobUrl) {
@@ -3342,12 +3342,12 @@ async function migrateToFSA() {
         }
         
         await saveSongs();
-        Gurasuraisu.showAlert(`Migrated ${blobIdsToDelete.length} items to use direct file access.`);
+        Polygol.showAlert(`Migrated ${blobIdsToDelete.length} items to use direct file access.`);
     }
 }
 
-        // --- GuraAI Music Assistant Integration ---
-        const isGuraAiEnabled = localStorage.getItem('aiAssistantEnabled') === 'true';
+        // --- PolygolAI Music Assistant Integration ---
+        const isPolygolAiEnabled = localStorage.getItem('aiAssistantEnabled') === 'true';
         let geminiApiKey = localStorage.getItem('geminiApiKey') || '';
         let genAI;
         let musicAiModel;
@@ -3360,10 +3360,10 @@ async function migrateToFSA() {
         }
 
 async function initializeMusicAi() {
-    if (!isGuraAiEnabled) return;
+    if (!isPolygolAiEnabled) return;
 
     if (!geminiApiKey) {
-        console.warn("GuraAI is enabled, but no API key is set. AI features will be disabled.");
+        console.warn("PolygolAI is enabled, but no API key is set. AI features will be disabled.");
         return;
     }
 
@@ -3372,7 +3372,7 @@ async function initializeMusicAi() {
         const { GoogleGenerativeAI } = await import("https://esm.sh/@google/generative-ai");
         genAI = new GoogleGenerativeAI(geminiApiKey);
 
-        const systemInstruction = `You are GuraAI, an intelligent music assistant integrated into a music player. Your goal is to help users discover music and manage their library. You will be given a list of songs from the user's library as context. Based on the user's prompt, you must call one of the available functions. Your primary task is to select relevant songs from the provided library list. Do not respond with conversational text; only use function calls.`;
+        const systemInstruction = `You are PolygolAI, an intelligent music assistant integrated into a music player. Your goal is to help users discover music and manage their library. You will be given a list of songs from the user's library as context. Based on the user's prompt, you must call one of the available functions. Your primary task is to select relevant songs from the provided library list. Do not respond with conversational text; only use function calls.`;
 
         const tools = [{
             "functionDeclarations": [
@@ -3408,9 +3408,9 @@ async function initializeMusicAi() {
             systemInstruction: systemInstruction,
         });
 
-        console.log("GuraAI Music Assistant Initialized.");
+        console.log("PolygolAI Music Assistant Initialized.");
     } catch (error) {
-        console.error("GuraAI Music Assistant Initialization failed:", error);
+        console.error("PolygolAI Music Assistant Initialization failed:", error);
     }
 }
 
@@ -3450,7 +3450,7 @@ const availableMusicFunctions = {
         const songIds = songStrings.map(s => findSongByString(s)).filter(Boolean).map(s => s.id);
         
         if (songIds.length === 0) {
-            Gurasuraisu.showPopup(`GuraAI couldn't find matching songs`);
+            Polygol.showPopup(`PolygolAI couldn't find matching songs`);
             return;
         }
 
@@ -3466,7 +3466,7 @@ const availableMusicFunctions = {
         });
 
         playlists.push(newPlaylist);
-        Gurasuraisu.showAlert(`Created "${playlistName}"`, `Playlist was created using GuraAI.`);
+        Polygol.showAlert(`Created "${playlistName}"`, `Playlist was created using PolygolAI.`);
         if (activeView === 'library') renderLibraryPage();
     }
     // getSongRecommendations is handled directly by the calling function, so it doesn't need an entry here.
@@ -4231,13 +4231,13 @@ async function renderHomePage() {
         </div>`;
     }).join('');
 
-    // --- GuraAI Section (Now renders a placeholder INSTANTLY) ---
+    // --- PolygolAI Section (Now renders a placeholder INSTANTLY) ---
     let aiPromptAreaHtml = '';
-    if (isGuraAiEnabled && musicAiModel && songs.length > 5) {
+    if (isPolygolAiEnabled && musicAiModel && songs.length > 5) {
         aiPromptAreaHtml = `
             <div id="ai-prompt-area" style="text-align:center; margin-bottom: 20px;">
                 <div id="ai-prompt-bar" style="display:flex; gap:10px; max-width:600px; margin: auto auto 20px; border-bottom: 1px solid var(--search-background); padding-bottom: 10px;">
-                    <input type="text" id="aiPromptInput" placeholder="Ask GuraAI" class="library-search-input" style="padding-left:15px;background: none;border: none;font-size: large;font-weight: bold; box-shadow: none; backdrop-filter: none;">
+                    <input type="text" id="aiPromptInput" placeholder="Ask PolygolAI" class="library-search-input" style="padding-left:15px;background: none;border: none;font-size: large;font-weight: bold; box-shadow: none; backdrop-filter: none;">
                     <button id="aiPromptSubmit" class="action-btn" style="height:auto; background: none; border: none; box-shadow: none; backdrop-filter: none;"><span class="material-symbols-rounded" style="font-size: 18px;">send</span></button>
                 </div>
                 <div id="ai-dynamic-prompts" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px"></div>
@@ -4267,7 +4267,7 @@ async function renderHomePage() {
     // --- Asynchronously update AI content ---
     // After the main page has rendered, call the function to fetch and populate AI prompts.
     // We DON'T await this, allowing the UI to be responsive while the AI works.
-    if (isGuraAiEnabled && musicAiModel && songs.length > 5) {
+    if (isPolygolAiEnabled && musicAiModel && songs.length > 5) {
         updateAiHomePagePrompts();
     }
 
@@ -4403,11 +4403,11 @@ function renderLibraryPage() {
             }).join('');
         
             // Now, generate the AI creator section ONLY if AI is enabled
-            if (isGuraAiEnabled && musicAiModel) {
+            if (isPolygolAiEnabled && musicAiModel) {
                 const aiPlaylistSection = `
                     <div id="ai-playlist-creator" style="grid-column: 1 / -1; margin: 20px auto 0 auto; max-width: 600px; text-align: center;">
                         <div style="display: flex; gap: 10px;">
-                            <input type="text" id="aiPlaylistPrompt" placeholder="Create a Playlist with GuraAI" class="library-search-input" style="padding-left: 15px;">
+                            <input type="text" id="aiPlaylistPrompt" placeholder="Create a Playlist with PolygolAI" class="library-search-input" style="padding-left: 15px;">
                             <button id="aiCreatePlaylistBtn" class="action-btn" style="height: auto;"><span class="material-symbols-rounded" style="font-size: 18px;">add</span></button>
                         </div>
                     </div>
@@ -4527,7 +4527,7 @@ async function deletePlaylist(playlistId) {
     const playlist = playlists.find(p => p.id === playlistId);
     if (!playlist) return;
 
-    if (await Gurasuraisu.showConfirm(`Are you sure you want to permanently delete the playlist "${playlist.name}"?`)) {
+    if (await Polygol.showConfirm(`Are you sure you want to permanently delete the playlist "${playlist.name}"?`)) {
         // 1. Remove the playlist from the in-memory array.
         playlists = playlists.filter(p => p.id !== playlistId);
 
@@ -4540,7 +4540,7 @@ async function deletePlaylist(playlistId) {
         closeDrawer();
 
         // 4. Notify the user and refresh the library view.
-        Gurasuraisu.showPopup(`Playlist "${playlist.name}" deleted`);
+        Polygol.showPopup(`Playlist "${playlist.name}" deleted`);
         if (activeView === 'library') {
             renderLibraryPage(); 
         }
@@ -4826,7 +4826,7 @@ async function searchLrclibForManualPick() {
                     song.lyrics = selectedTrack.plainLyrics;
                     song.lrcData = null;
                 } else {
-                    Gurasuraisu.showPopup("Selected track has no lyrics");
+                    Polygol.showPopup("Selected track has no lyrics");
                     return;
                 }
 
@@ -5094,7 +5094,7 @@ function addToQueue(songId, position = 'last') {
         playQueue.push(song);
     }
 
-    Gurasuraisu.showPopup(`Added "${sanitize(song.name)}" to queue`);
+    Polygol.showPopup(`Added "${sanitize(song.name)}" to queue`);
     
     if (isPanelVisible && panelContent === 'queue') {
         renderQueue();
@@ -5130,15 +5130,15 @@ async function generateAutoplaySongs() {
 
     let finalRecommendations = [];
 
-    // --- Path 1: GuraAI-Powered Recommendations (Highest Priority) ---
-    if (isGuraAiEnabled && musicAiModel) {
-        console.log("Generating autoplay using GuraAI...");
+    // --- Path 1: PolygolAI-Powered Recommendations (Highest Priority) ---
+    if (isPolygolAiEnabled && musicAiModel) {
+        console.log("Generating autoplay using PolygolAI...");
         finalRecommendations = await generateAiAutoplaySongs();
     }
 
     // --- Path 2: Advanced Scoring Fallback (If AI is off or fails) ---
     if (finalRecommendations.length === 0) {
-        console.log("GuraAI not used, falling back to advanced scoring method...");
+        console.log("PolygolAI not used, falling back to advanced scoring method...");
 
         // 1. Create a master set of all songs the user already "owns" or has in their queue to prevent duplicates.
         const ownedSongKeys = new Set(localSongLookup.keys());
@@ -5291,7 +5291,7 @@ async function generateAiAutoplaySongs() {
             return recommendedSongs;
         }
     } catch (error) {
-        console.error("GuraAI Autoplay Error:", error);
+        console.error("PolygolAI Autoplay Error:", error);
     }
     return []; // Return empty array on failure
 }
@@ -5440,7 +5440,7 @@ async function playSong(song, playContext = null) {
         await updateMediaSessionMetadata(song);
 
         // Register media session
-        Gurasuraisu.registerMediaSession(
+        Polygol.registerMediaSession(
             { title: song.name, artist: song.artist, artwork: [{ src: song.albumArt }] },
             ['playPause', 'next', 'prev']
         );
@@ -5460,12 +5460,12 @@ async function playSong(song, playContext = null) {
 
         playPauseIcon.textContent = 'pause';
         playPauseBtn.classList.add('playing');
-        Gurasuraisu.updatePlaybackState({ playbackState: 'playing' });
+        Polygol.updatePlaybackState({ playbackState: 'playing' });
         updateMiniplayerUI(song, 'playing');
 
     } catch (error) {
         if (error.name !== 'AbortError') console.error("Failed to play song:", song.name, error);
-        Gurasuraisu.updatePlaybackState({ playbackState: 'paused' });
+        Polygol.updatePlaybackState({ playbackState: 'paused' });
         updateMiniplayerUI(song, 'paused');
     } finally {
         isPlayerLoading = false;
@@ -5619,7 +5619,7 @@ function initModalVariables() {
                 // ... (existing directory handle logic) ...
                 for (const existingHandle of directoryHandles) {
                     if (await handle.isSameEntry(existingHandle)) {
-                        Gurasuraisu.showPopup("This folder has already been added");
+                        Polygol.showPopup("This folder has already been added");
                         return;
                     }
                 }
@@ -5634,7 +5634,7 @@ function initModalVariables() {
                 if (err.name !== 'AbortError') console.error('Error picking directory:', err);
             }
         } else {
-            Gurasuraisu.showAlert("Folder access is not supported in this browser/mode.");
+            Polygol.showAlert("Folder access is not supported in this browser/mode.");
         }
     });
 
@@ -5670,12 +5670,12 @@ function initModalVariables() {
             const file = new File([blob], filename, { type: blob.type || 'audio/mpeg' });
             
             await addSongs([file], 'indexeddb');
-            Gurasuraisu.showPopup("Song added from URL");
+            Polygol.showPopup("Song added from URL");
             document.getElementById('urlInput').value = '';
             closeModal(addMusicModal);
         } catch (e) {
             console.error("URL Import failed", e);
-            Gurasuraisu.showAlert("Failed to import from URL. Check CORS settings or URL validity.");
+            Polygol.showAlert("Failed to import from URL. Check CORS settings or URL validity.");
         } finally {
             btn.textContent = originalText;
             btn.disabled = false;
@@ -6076,12 +6076,12 @@ async function processAndCacheSoundcloudTrack(songObject) {
 async function saveSoundcloudTrackToLibrary() {
     if (!currentlyPlayingSong || currentlyPlayingSong.storage !== 'soundcloud') return;
     if (currentlyPlayingSong.protocol && currentlyPlayingSong.protocol.includes('encrypted')) {
-        Gurasuraisu.showAlert("Could not save song.");
+        Polygol.showAlert("Could not save song.");
         return;
     }
 
     const songToSave = currentlyPlayingSong;
-    Gurasuraisu.showPopup(`Saving "${songToSave.name}"`);
+    Polygol.showPopup(`Saving "${songToSave.name}"`);
 
     try {
         let audioBlob;
@@ -6138,7 +6138,7 @@ async function saveSoundcloudTrackToLibrary() {
 
     } catch (error) {
         console.error("Failed to save SoundCloud track to library:", error);
-        Gurasuraisu.showPopup("Cannot save song");
+        Polygol.showPopup("Cannot save song");
     }
 }
 
@@ -6278,7 +6278,7 @@ function disconnectAudioGraph() {
 }
         
 async function removeFolder(folderName) {
-    if (await Gurasuraisu.showConfirm(`Are you sure you want to remove the folder "${folderName}"? All songs from this folder will be removed from your library.`)) {
+    if (await Polygol.showConfirm(`Are you sure you want to remove the folder "${folderName}"? All songs from this folder will be removed from your library.`)) {
         return;
     }
 
@@ -6338,7 +6338,7 @@ async function removeFolder(folderName) {
     updatePlayQueue();
 
     // 4. Show a confirmation message and refresh the UI.
-    Gurasuraisu.showPopup(`Removed "${folderName}"`);
+    Polygol.showPopup(`Removed "${folderName}"`);
     openManageFoldersModal(); // Refreshes the folder list inside the modal.
     if (activeView === 'library') {
         renderLibraryPage(); // Refreshes the main library view in the background.
@@ -6868,7 +6868,7 @@ window.addEventListener("load", async () => {
 
                 // If some handles were invalid, update the database with the cleaned list.
                 if (directoryHandles.length < storedHandles.length) {
-                    Gurasuraisu.showAlert("Some music folders need to be re-added after the system import.");
+                    Polygol.showAlert("Some music folders need to be re-added after the system import.");
                     const writeTx = db.transaction('config', 'readwrite');
                     writeTx.objectStore('config').put({ key: 'directoryHandles', value: directoryHandles });
                     await writeTx.done;
@@ -6981,7 +6981,7 @@ audioPlayer.addEventListener('timeupdate', async () => {
             await logSongPlay(song.id);
         }
 
-        if (audioPlayer.duration) Gurasuraisu.updateMediaProgress({ currentTime: audioPlayer.currentTime, duration: audioPlayer.duration });
+        if (audioPlayer.duration) Polygol.updateMediaProgress({ currentTime: audioPlayer.currentTime, duration: audioPlayer.duration });
         if ('mediaSession' in navigator) updateMediaSessionPositionState();
         if (crossfadeEnabled && audioPlayer.duration > 0 && audioPlayer.duration - audioPlayer.currentTime < 3 && !audioPlayer.isFading) {
              audioPlayer.isFading = true;
@@ -7074,7 +7074,7 @@ playPauseBtn.addEventListener('click', async () => {
             const song = currentlyPlayingSong;
             if (song) {
                 updateMediaSessionMetadata(song);
-                Gurasuraisu.registerMediaSession(
+                Polygol.registerMediaSession(
                     { title: song.name, artist: song.artist, album: song.album, artwork: [{ src: song.albumArt }] },
                     ['playPause', 'next', 'prev']
                 );
@@ -7137,7 +7137,7 @@ volumeSlider.addEventListener('input', (e) => {
     else volumeIcon.textContent = 'volume_up';
 });
 
-window.addEventListener('GurasuraisuVolumeChange', (e) => {
+window.addEventListener('PolygolVolumeChange', (e) => {
     const volume = e.detail.muted ? 0 : e.detail.level;
     audioPlayer.volume = volume;
     volumeSlider.value = volume * 100;
@@ -7154,7 +7154,7 @@ audioPlayer.addEventListener('pause', () => {
     playPauseBtn.classList.remove('playing');
     updateMiniplayerUI(currentlyPlayingSong, 'paused');
     updateMediaSessionPlaybackState('paused');
-    Gurasuraisu.updatePlaybackState({ playbackState: 'paused' });
+    Polygol.updatePlaybackState({ playbackState: 'paused' });
 });
 
 audioPlayer.addEventListener('play', () => {
@@ -7165,7 +7165,7 @@ audioPlayer.addEventListener('play', () => {
     playPauseBtn.classList.add('playing');
     updateMiniplayerUI(currentlyPlayingSong, 'playing');
     updateMediaSessionPlaybackState('playing');
-    Gurasuraisu.updatePlaybackState({ playbackState: 'playing' });
+    Polygol.updatePlaybackState({ playbackState: 'playing' });
 
     if (!document.body.classList.contains('reduce-animations')) {
     }
@@ -7429,7 +7429,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (call && call.name === 'createPlaylist') {
                     availableMusicFunctions.createPlaylist(call.args);
                 } else {
-                    Gurasuraisu.showAlert("GuraAI was unable to create a playlist from that prompt");
+                    Polygol.showAlert("PolygolAI was unable to create a playlist from that prompt");
                 }
                 promptInput.value = '';
                 e.target.htmlContent = '<span class="material-symbols-rounded" style="font-size: 18px;">add</span>';
@@ -7456,16 +7456,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         <div><div class="song-title">${sanitize(song.name)}</div><div class="album-artist" style="font-size: 0.8em;">${sanitize(song.artist)}</div></div>
                                     </div>
                                 </div>`).join('')}</div>`;
-                            openDrawer("GuraAI Recommendations", prompt, contentHtml);
+                            openDrawer("PolygolAI Recommendations", prompt, contentHtml);
                         } else {
-                             Gurasuraisu.showPopup("GuraAI couldn't find any matching songs for that");
+                             Polygol.showPopup("PolygolAI couldn't find any matching songs for that");
                         }
                     } else {
-                        Gurasuraisu.showPopup("GuraAI could not process that request");
+                        Polygol.showPopup("PolygolAI could not process that request");
                     }
                 } catch (err) {
                     console.error("Error handling Home AI Prompt:", err);
-                    Gurasuraisu.showPopup("An error occurred with the AI request");
+                    Polygol.showPopup("An error occurred with the AI request");
                 }
             };
         
@@ -7584,7 +7584,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         moreButton.addEventListener('click', (e) => {
             e.stopPropagation();
             if (!currentSongId || !currentlyPlayingSong) {
-                Gurasuraisu.showPopup('No song is currently playing');
+                Polygol.showPopup('No song is currently playing');
                 return;
             }
             
@@ -7609,7 +7609,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         document.getElementById('menuDeleteSong').addEventListener('click', async () => {
-            if (currentSongId && await Gurasuraisu.showConfirm('Delete this song? This is permanent.')) await deleteSong(currentSongId);
+            if (currentSongId && await Polygol.showConfirm('Delete this song? This is permanent.')) await deleteSong(currentSongId);
             moreOptionsMenu.classList.remove('visible');
         });
         
@@ -7764,10 +7764,10 @@ initializeMusicAi();
             }
 
             if (filesToAdd.length > 0) {
-                Gurasuraisu.showPopup(`${filesToAdd.length} new songs added to Library`);
+                Polygol.showPopup(`${filesToAdd.length} new songs added to Library`);
                 await addSongs(filesToAdd, 'filesystem');
             } else {
-                Gurasuraisu.showPopup('No new songs found in the selected directory');
+                Polygol.showPopup('No new songs found in the selected directory');
             }
         }
 
@@ -7784,9 +7784,9 @@ initializeMusicAi();
                     playPauseIcon.textContent = 'play_arrow';
                     playPauseBtn.classList.remove('playing');
                 }, minutes * 60 * 1000);
-                Gurasuraisu.showPopup(`Sleep timer set for ${minutes} minutes`);
+                Polygol.showPopup(`Sleep timer set for ${minutes} minutes`);
             } else {
-                Gurasuraisu.showPopup('Sleep timer cancelled');
+                Polygol.showPopup('Sleep timer cancelled');
             }
             closeModal(sleepTimerModal);
         }
@@ -7824,7 +7824,7 @@ async function loadSongsAndPlaylists() {
         async function createPlaylistAndAddSong() {
             const newName = document.getElementById('newPlaylistName').value.trim();
             if (!newName) return;
-            if (!currentSongId) return Gurasuraisu.showAlert("Play an item first.");
+            if (!currentSongId) return Polygol.showAlert("Play an item first.");
         
             const newPlaylist = { name: newName, songIds: [currentSongId] };
             
@@ -7842,10 +7842,10 @@ async function loadSongsAndPlaylists() {
                 playlists.push(newPlaylist);
                 document.getElementById('newPlaylistName').value = '';
                 closeModal(playlistModal);
-                Gurasuraisu.showPopup(`Added item to new playlist "${newName}"`);
+                Polygol.showPopup(`Added item to new playlist "${newName}"`);
             } catch (error) {
                 console.error("Failed to create playlist:", error);
-                Gurasuraisu.showAlert(`Failed to create playlist`);
+                Polygol.showAlert(`Failed to create playlist`);
             }
         }
 
@@ -7871,14 +7871,14 @@ async function loadSongsAndPlaylists() {
                 const writeTx = db.transaction('playlists', 'readwrite');
                 writeTx.objectStore('playlists').put(playlist);
                 await writeTx.done;
-                Gurasuraisu.showPopup(`Added to "${playlist.name}"`);
+                Polygol.showPopup(`Added to "${playlist.name}"`);
             } else {
-                Gurasuraisu.showPopup(`Song is already in "${playlist.name}"`);
+                Polygol.showPopup(`Song is already in "${playlist.name}"`);
             }
             closeModal(playlistModal);
         }
 
-        Gurasuraisu.onMediaControl({
+        Polygol.onMediaControl({
             playPause: () => playPauseBtn.click(),
             next: () => nextBtn.click(),
             prev: () => prevBtn.click()
@@ -7892,11 +7892,11 @@ async function loadSongsAndPlaylists() {
             listOffsets: {},
 
             init: function() {
-                if (typeof Gurasuraisu === 'undefined') return;
+                if (typeof Polygol === 'undefined') return;
                 this.render();
-                Gurasuraisu.onRemoteAction((id, value) => this.handleAction(id, value));
+                Polygol.onRemoteAction((id, value) => this.handleAction(id, value));
                 // Handle re-launch requests from remote
-                Gurasuraisu.onRequestRemoteUI(() => this.render());
+                Polygol.onRequestRemoteUI(() => this.render());
             },
 
             // Send only partial updates for frequently changing data
@@ -7905,7 +7905,7 @@ async function loadSongsAndPlaylists() {
                 if (this.currentView !== 'nowPlaying') return;
 
                 const duration = audioPlayer.duration || 1;
-                Gurasuraisu.sendRemoteUpdate({
+                Polygol.sendRemoteUpdate({
                     'cmd_seek': (audioPlayer.currentTime / duration) * 100,
                     'lbl_time_current': formatTime(audioPlayer.currentTime),
                     'lbl_time_total': formatTime(duration)
@@ -8036,7 +8036,7 @@ async function loadSongsAndPlaylists() {
                     }
                 }
 
-                Gurasuraisu.setRemoteUI(ui);
+                Polygol.setRemoteUI(ui);
             },
 
             handleAction: function(id, value) {
