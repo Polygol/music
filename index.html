@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Music</title>
+    <title data-lang-key="TITLE">Music</title>
     <link id="favicon" rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,700,1,0">
@@ -1761,6 +1761,7 @@
             color: var(--text-color);
         }
     </style>
+    <script src="lang.js"></script>
 </head>
 <body data-app-name="MUSIC">
     <svg style="position: absolute; width: 0; height: 0;">
@@ -1787,19 +1788,19 @@
     <div class="toolbar">
         <button class="tab-btn active" data-view="home">
             <span class="material-symbols-rounded">home</span>
-            Home
+            <span data-lang-key="HOME">Home</span>
         </button>
         <button class="tab-btn" data-view="library">
             <span class="material-symbols-rounded">newsstand</span>
-            Library
+            <span data-lang-key="LIBRARY">Library</span>
         </button>
         <button class="tab-btn" data-view="soundcloud" id="soundcloud-tab" style="display: none;">
             <span class="material-symbols-rounded">podcasts</span>
-            New
+            <span data-lang-key="NEW">New</span>
         </button>
         <button class="tab-btn" data-view="search">
             <span class="material-symbols-rounded">search</span>
-            Search
+            <span data-lang-key="SEARCH">Search</span>
         </button>
     </div>
 
@@ -1840,7 +1841,7 @@
                 </div>
                 <div class="search-container" id="soundcloud-offline-search-container" style="display: none; max-width: 246px; margin: 0px;">
                     <span class="material-symbols-rounded search-icon">search</span>
-                    <input type="text" id="soundcloudOfflineSearchInput" placeholder="Search your cached songs" class="library-search-input">
+                    <input type="text" id="soundcloudOfflineSearchInput" placeholder="Search your cached songs" data-lang-placeholder="SEARCH_OFFLINE_PLACEHOLDER" class="library-search-input">
                 </div>
                 <div class="library-actions">
                     <button class="library-action-btn" id="soundcloudOfflineToggle">
@@ -1851,7 +1852,7 @@
 
             <div class="search-container" id="soundcloud-search-container" style="position: absolute; width: 90%; z-index: 1; left: 50%; transform: translateX(-50%);">
                 <span class="material-symbols-rounded search-icon" style="padding-left: 2px;">search</span>
-                <input type="text" id="soundcloudSearchInput" placeholder="Search SoundCloud" class="library-search-input" style="box-shadow: var(--sun-shadow), 0 0 15px rgba(0, 0, 0, 0.05); padding: 12px 17px 12px 42px;">
+                <input type="text" id="soundcloudSearchInput" placeholder="Search SoundCloud" data-lang-placeholder="SEARCH_SOUNDCLOUD_PLACEHOLDER" class="library-search-input" style="box-shadow: var(--sun-shadow), 0 0 15px rgba(0, 0, 0, 0.05); padding: 12px 17px 12px 42px;">
             </div>
             
             <div id="soundcloud-results-grid" class="item-grid" style="padding-top: 60px; padding-bottom: 240px;">
@@ -1863,7 +1864,7 @@
         <div class="page-content-wrapper">
             <div class="search-container" style="position: absolute; width: 90%; z-index: 1; left: 50%; transform: translateX(-50%);">
                 <span class="material-symbols-rounded search-icon" style="padding-left: 2px;">search</span>
-                <input type="text" id="searchInput" placeholder="Search your Library" class="library-search-input" style="box-shadow: var(--sun-shadow), 0 0 15px rgba(0, 0, 0, 0.05); padding: 12px 17px 12px 42px;">
+                <input type="text" id="searchInput" placeholder="Search your Library" data-lang-placeholder="SEARCH_LIBRARY_PLACEHOLDER" class="library-search-input" style="box-shadow: var(--sun-shadow), 0 0 15px rgba(0, 0, 0, 0.05); padding: 12px 17px 12px 42px;">
             </div>
             <div id="search-results-grid" class="item-grid" style="padding-top: 60px;">
                 <!-- Search results will be rendered here -->
@@ -1929,20 +1930,20 @@
             <div id="moreOptionsMenu" class="more-options-menu" style="right: 30px; bottom: 90px;">
                 <div class="menu-item" id="menuFullscreenBtn">
                     <span class="material-symbols-rounded">expand_content</span>
-                    <span>Fullscreen</span>
+                    <span data-lang-key="FULLSCREEN">Fullscreen</span>
                 </div>
                 <div class="menu-separator"></div>
                 <div class="menu-item" id="menuEditMetadata">
                     <span class="material-symbols-rounded">edit</span>
-                    <span>Edit Info</span>
+                    <span data-lang-key="EDIT_INFO">Edit Info</span>
                 </div>
                 <div class="menu-item" id="menuSaveToLibrary">
                     <span class="material-symbols-rounded">arrow_circle_down</span>
-                    <span>Save to Library</span>
+                    <span data-lang-key="SAVE_TO_LIBRARY">Save to Library</span>
                 </div>
                 <div class="menu-item" id="menuAddToPlaylist">
                     <span class="material-symbols-rounded">playlist_add</span>
-                    <span>Add to Playlist</span>
+                    <span data-lang-key="ADD_TO_PLAYLIST">Add to Playlist</span>
                 </div>
                 <div class="menu-separator"></div>
                 <div class="menu-item" id="menuCrossfade">
@@ -1952,15 +1953,15 @@
                 </div>
                 <div class="menu-item" id="menuEqualizer">
                     <span class="material-symbols-rounded">equalizer</span>
-                    <span>Equalizer</span>
+                    <span data-lang-key="EQUALIZER">Equalizer</span>
                 </div>
                 <div class="menu-item" id="menuSleepTimer">
                     <span class="material-symbols-rounded">timer</span>
-                    <span>Sleep Timer</span>
+                    <span data-lang-key="SLEEP_TIMER">Sleep Timer</span>
                 </div>
                 <div class="menu-item" id="menuDeleteSong" style="background: rgba(255, 107, 107, 0.5);border: 1px solid var(--glass-border);border-radius: 50px;corner-shape: round;justify-content: center;box-shadow: var(--sun-shadow);margin-top: 10px;">
                     <span class="material-symbols-rounded">delete</span>
-                    <span>Delete Song</span>
+                    <span data-lang-key="DELETE_SONG">Delete Song</span>
                 </div>
             </div>
         </div>
@@ -2000,7 +2001,7 @@
                     <label for="soundcloudToggle">Enable SoundCloud Streaming</label>
                     <input type="checkbox" id="soundcloudToggle">
                 </div>
-                <input type="text" id="soundcloudClientId" placeholder="SoundCloud Client ID" class="search-input" style="padding-left: 15px;">
+                <input type="text" id="soundcloudClientId" placeholder="SoundCloud Client ID" data-lang-placeholder="SC_CLIENT_ID_PLACEHOLDER" class="search-input" style="padding-left: 15px;">
                 <small>You will need to disable CORS to use SoundCloud streaming. A browser extension may be required.</small>
 
                 <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -2059,8 +2060,8 @@
             <input type="hidden" id="editSongId">
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <input type="text" id="editTitle" placeholder="Title" class="search-input" style="padding-left: 15px;">
-                <input type="text" id="editArtist" placeholder="Artist" class="search-input" style="padding-left: 15px;">
-                <input type="text" id="editAlbum" placeholder="Album" class="search-input" style="padding-left: 15px;">
+                <input type="text" id="editArtist" placeholder="Artist" data-lang-placeholder="ARTIST_PLACEHOLDER" class="search-input" style="padding-left: 15px;">
+                <input type="text" id="editAlbum" placeholder="Album" data-lang-placeholder="ALBUM_PLACEHOLDER" class="search-input" style="padding-left: 15px;">
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
                 <button id="cancelEdit" class="filter-btn">Cancel</button>
@@ -2148,11 +2149,11 @@
     <div id="songContextMenu" class="context-menu">
         <div class="menu-item" id="menuAddToQueueNext">
             <span class="material-symbols-rounded">playlist_play</span>
-            <span>Play Next</span>
+            <span data-lang-key="PLAY_NEXT">Play Next</span>
         </div>
         <div class="menu-item" id="menuAddToQueueLast">
             <span class="material-symbols-rounded">playlist_add</span>
-            <span>Add to Queue</span>
+            <span data-lang-key="ADD_TO_QUEUE">Add to Queue</span>
         </div>
     </div>
 
@@ -3342,7 +3343,7 @@ async function migrateToFSA() {
         }
         
         await saveSongs();
-        Polygol.showAlert(`Migrated ${blobIdsToDelete.length} items to use direct file access.`);
+        Polygol.showAlert(t("MIGRATED_DIRECT_ACCESS", {count: blobIdsToDelete.length}));
     }
 }
 
@@ -3450,7 +3451,7 @@ const availableMusicFunctions = {
         const songIds = songStrings.map(s => findSongByString(s)).filter(Boolean).map(s => s.id);
         
         if (songIds.length === 0) {
-            Polygol.showPopup(`PolygolAI couldn't find matching songs`);
+            Polygol.showPopup(t("AI_NO_MATCHING"));
             return;
         }
 
@@ -3466,7 +3467,7 @@ const availableMusicFunctions = {
         });
 
         playlists.push(newPlaylist);
-        Polygol.showAlert(`Created "${playlistName}"`, `Playlist was created using PolygolAI.`);
+        Polygol.showAlert(t("CREATED_PLAYLIST_NAME", {name: playlistName}), t("PLAYLIST_CREATED_AI"));
         if (activeView === 'library') renderLibraryPage();
     }
     // getSongRecommendations is handled directly by the calling function, so it doesn't need an entry here.
@@ -4527,7 +4528,7 @@ async function deletePlaylist(playlistId) {
     const playlist = playlists.find(p => p.id === playlistId);
     if (!playlist) return;
 
-    if (await Polygol.showConfirm(`Are you sure you want to permanently delete the playlist "${playlist.name}"?`)) {
+    if (await Polygol.showConfirm(t("CONFIRM_DELETE_PLAYLIST", {name: playlist.name}))) {
         // 1. Remove the playlist from the in-memory array.
         playlists = playlists.filter(p => p.id !== playlistId);
 
@@ -4540,7 +4541,7 @@ async function deletePlaylist(playlistId) {
         closeDrawer();
 
         // 4. Notify the user and refresh the library view.
-        Polygol.showPopup(`Playlist "${playlist.name}" deleted`);
+        Polygol.showPopup(t("PLAYLIST_DELETED_NAME", {name: playlist.name}));
         if (activeView === 'library') {
             renderLibraryPage(); 
         }
@@ -4826,7 +4827,7 @@ async function searchLrclibForManualPick() {
                     song.lyrics = selectedTrack.plainLyrics;
                     song.lrcData = null;
                 } else {
-                    Polygol.showPopup("Selected track has no lyrics");
+                    Polygol.showPopup(t("SELECTED_TRACK_NO_LYRICS"));
                     return;
                 }
 
@@ -5094,7 +5095,7 @@ function addToQueue(songId, position = 'last') {
         playQueue.push(song);
     }
 
-    Polygol.showPopup(`Added "${sanitize(song.name)}" to queue`);
+    Polygol.showPopup(t("ADDED_SONG_TO_QUEUE", {name: sanitize(song.name)}));
     
     if (isPanelVisible && panelContent === 'queue') {
         renderQueue();
@@ -5619,7 +5620,7 @@ function initModalVariables() {
                 // ... (existing directory handle logic) ...
                 for (const existingHandle of directoryHandles) {
                     if (await handle.isSameEntry(existingHandle)) {
-                        Polygol.showPopup("This folder has already been added");
+                        Polygol.showPopup(t("FOLDER_ALREADY_ADDED"));
                         return;
                     }
                 }
@@ -5634,7 +5635,7 @@ function initModalVariables() {
                 if (err.name !== 'AbortError') console.error('Error picking directory:', err);
             }
         } else {
-            Polygol.showAlert("Folder access is not supported in this browser/mode.");
+            Polygol.showAlert(t("FOLDER_ACCESS_UNSUPPORTED"));
         }
     });
 
@@ -5670,12 +5671,12 @@ function initModalVariables() {
             const file = new File([blob], filename, { type: blob.type || 'audio/mpeg' });
             
             await addSongs([file], 'indexeddb');
-            Polygol.showPopup("Song added from URL");
+            Polygol.showPopup(t("SONG_ADDED_URL"));
             document.getElementById('urlInput').value = '';
             closeModal(addMusicModal);
         } catch (e) {
             console.error("URL Import failed", e);
-            Polygol.showAlert("Failed to import from URL. Check CORS settings or URL validity.");
+            Polygol.showAlert(t("FAILED_IMPORT_URL"));
         } finally {
             btn.textContent = originalText;
             btn.disabled = false;
@@ -6076,12 +6077,12 @@ async function processAndCacheSoundcloudTrack(songObject) {
 async function saveSoundcloudTrackToLibrary() {
     if (!currentlyPlayingSong || currentlyPlayingSong.storage !== 'soundcloud') return;
     if (currentlyPlayingSong.protocol && currentlyPlayingSong.protocol.includes('encrypted')) {
-        Polygol.showAlert("Could not save song.");
+        Polygol.showAlert(t("COULD_NOT_SAVE_SONG"));
         return;
     }
 
     const songToSave = currentlyPlayingSong;
-    Polygol.showPopup(`Saving "${songToSave.name}"`);
+    Polygol.showPopup(t("SAVING_SONG_NAME", {name: songToSave.name}));
 
     try {
         let audioBlob;
@@ -6138,7 +6139,7 @@ async function saveSoundcloudTrackToLibrary() {
 
     } catch (error) {
         console.error("Failed to save SoundCloud track to library:", error);
-        Polygol.showPopup("Cannot save song");
+        Polygol.showPopup(t("CANNOT_SAVE_SONG"));
     }
 }
 
@@ -6278,7 +6279,7 @@ function disconnectAudioGraph() {
 }
         
 async function removeFolder(folderName) {
-    if (await Polygol.showConfirm(`Are you sure you want to remove the folder "${folderName}"? All songs from this folder will be removed from your library.`)) {
+    if (await Polygol.showConfirm(t("CONFIRM_REMOVE_FOLDER", {name: folderName}))) {
         return;
     }
 
@@ -6338,7 +6339,7 @@ async function removeFolder(folderName) {
     updatePlayQueue();
 
     // 4. Show a confirmation message and refresh the UI.
-    Polygol.showPopup(`Removed "${folderName}"`);
+    Polygol.showPopup(t("REMOVED_FOLDER_NAME", {name: folderName}));
     openManageFoldersModal(); // Refreshes the folder list inside the modal.
     if (activeView === 'library') {
         renderLibraryPage(); // Refreshes the main library view in the background.
@@ -6868,7 +6869,7 @@ window.addEventListener("load", async () => {
 
                 // If some handles were invalid, update the database with the cleaned list.
                 if (directoryHandles.length < storedHandles.length) {
-                    Polygol.showAlert("Some music folders need to be re-added after the system import.");
+                    Polygol.showAlert(t("READD_FOLDERS_NOTICE"));
                     const writeTx = db.transaction('config', 'readwrite');
                     writeTx.objectStore('config').put({ key: 'directoryHandles', value: directoryHandles });
                     await writeTx.done;
@@ -7429,7 +7430,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (call && call.name === 'createPlaylist') {
                     availableMusicFunctions.createPlaylist(call.args);
                 } else {
-                    Polygol.showAlert("PolygolAI was unable to create a playlist from that prompt");
+                    Polygol.showAlert(t("AI_UNABLE_CREATE_PLAYLIST"));
                 }
                 promptInput.value = '';
                 e.target.htmlContent = '<span class="material-symbols-rounded" style="font-size: 18px;">add</span>';
@@ -7458,14 +7459,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </div>`).join('')}</div>`;
                             openDrawer("PolygolAI Recommendations", prompt, contentHtml);
                         } else {
-                             Polygol.showPopup("PolygolAI couldn't find any matching songs for that");
+                             Polygol.showPopup(t("AI_NO_MATCHING"));
                         }
                     } else {
-                        Polygol.showPopup("PolygolAI could not process that request");
+                        Polygol.showPopup(t("AI_COULD_NOT_PROCESS"));
                     }
                 } catch (err) {
                     console.error("Error handling Home AI Prompt:", err);
-                    Polygol.showPopup("An error occurred with the AI request");
+                    Polygol.showPopup(t("AI_REQUEST_ERROR"));
                 }
             };
         
@@ -7584,7 +7585,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         moreButton.addEventListener('click', (e) => {
             e.stopPropagation();
             if (!currentSongId || !currentlyPlayingSong) {
-                Polygol.showPopup('No song is currently playing');
+                Polygol.showPopup(t("NO_SONG_PLAYING"));
                 return;
             }
             
@@ -7609,7 +7610,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         document.getElementById('menuDeleteSong').addEventListener('click', async () => {
-            if (currentSongId && await Polygol.showConfirm('Delete this song? This is permanent.')) await deleteSong(currentSongId);
+            if (currentSongId && await Polygol.showConfirm(t("DELETE_SONG_CONFIRM"))) await deleteSong(currentSongId);
             moreOptionsMenu.classList.remove('visible');
         });
         
@@ -7764,10 +7765,10 @@ initializeMusicAi();
             }
 
             if (filesToAdd.length > 0) {
-                Polygol.showPopup(`${filesToAdd.length} new songs added to Library`);
+                Polygol.showPopup(t("NEW_SONGS_ADDED", {count: filesToAdd.length}));
                 await addSongs(filesToAdd, 'filesystem');
             } else {
-                Polygol.showPopup('No new songs found in the selected directory');
+                Polygol.showPopup(t("NO_NEW_SONGS"));
             }
         }
 
@@ -7784,9 +7785,9 @@ initializeMusicAi();
                     playPauseIcon.textContent = 'play_arrow';
                     playPauseBtn.classList.remove('playing');
                 }, minutes * 60 * 1000);
-                Polygol.showPopup(`Sleep timer set for ${minutes} minutes`);
+                Polygol.showPopup(t("SLEEP_TIMER_SET", {minutes: minutes}));
             } else {
-                Polygol.showPopup('Sleep timer cancelled');
+                Polygol.showPopup(t("SLEEP_TIMER_CANCELLED"));
             }
             closeModal(sleepTimerModal);
         }
@@ -7824,7 +7825,7 @@ async function loadSongsAndPlaylists() {
         async function createPlaylistAndAddSong() {
             const newName = document.getElementById('newPlaylistName').value.trim();
             if (!newName) return;
-            if (!currentSongId) return Polygol.showAlert("Play an item first.");
+            if (!currentSongId) return Polygol.showAlert(t("PLAY_ITEM_FIRST"));
         
             const newPlaylist = { name: newName, songIds: [currentSongId] };
             
@@ -7842,10 +7843,10 @@ async function loadSongsAndPlaylists() {
                 playlists.push(newPlaylist);
                 document.getElementById('newPlaylistName').value = '';
                 closeModal(playlistModal);
-                Polygol.showPopup(`Added item to new playlist "${newName}"`);
+                Polygol.showPopup(t("ADDED_ITEM_NEW_PLAYLIST", {name: newName}));
             } catch (error) {
                 console.error("Failed to create playlist:", error);
-                Polygol.showAlert(`Failed to create playlist`);
+                Polygol.showAlert(t("FAILED_CREATE_PLAYLIST"));
             }
         }
 
@@ -7871,9 +7872,9 @@ async function loadSongsAndPlaylists() {
                 const writeTx = db.transaction('playlists', 'readwrite');
                 writeTx.objectStore('playlists').put(playlist);
                 await writeTx.done;
-                Polygol.showPopup(`Added to "${playlist.name}"`);
+                Polygol.showPopup(t("ADDED_TO_PLAYLIST_NAME", {name: playlist.name}));
             } else {
-                Polygol.showPopup(`Song is already in "${playlist.name}"`);
+                Polygol.showPopup(t("SONG_ALREADY_IN_PLAYLIST", {name: playlist.name}));
             }
             closeModal(playlistModal);
         }
@@ -8142,5 +8143,53 @@ async function loadSongsAndPlaylists() {
             setTimeout(() => RemoteInterface.init(), 1000);
         });
     </script>
+<script>
+function getAppLanguage() {
+    let l = (localStorage.getItem('language') || localStorage.getItem('selectedLanguage') || 'EN').toUpperCase();
+    if (l === 'JA') l = 'JP';
+    return ['EN', 'JP', 'KO', 'ZH'].includes(l) ? l : 'EN';
+}
+
+function t(key, params = {}) {
+    const lang = getAppLanguage();
+    const dict = window['LANG_' + lang + '_MUSIC'] || window['LANG_EN_MUSIC'] || {};
+    let str = dict[key] || key;
+    Object.keys(params).forEach(p => str = str.replace(new RegExp('\\{' + p + '\\}', 'g'), params[p]));
+    return str;
+}
+
+function applyLanguage(langCode) {
+    if (langCode) localStorage.setItem('language', langCode);
+    const lang = getAppLanguage();
+    const bcpMap = { EN: 'en-US', JP: 'ja-JP', KO: 'ko-KR', ZH: 'zh-CN' };
+    document.documentElement.lang = bcpMap[lang] || 'en-US';
+    
+    document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const k = el.getAttribute('data-lang-key');
+        if (k) {
+            if (el.tagName === 'TITLE') document.title = t(k);
+            else el.textContent = t(k);
+        }
+    });
+    
+    document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+        const k = el.getAttribute('data-lang-placeholder');
+        if (k) el.placeholder = t(k);
+    });
+    
+    document.querySelectorAll('[data-lang-title]').forEach(el => {
+        const k = el.getAttribute('data-lang-title');
+        if (k) el.title = t(k);
+    });
+}
+
+window.addEventListener('message', (e) => {
+    if (e.data && (e.data.type === 'languageUpdate' || e.data.type === 'localeUpdate')) {
+        applyLanguage(e.data.languageCode);
+    }
+});
+
+window.addEventListener('DOMContentLoaded', () => applyLanguage());
+</script>
 </body>
 </html>
