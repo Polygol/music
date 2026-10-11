@@ -2,6 +2,28 @@
 window.bcpMap = { EN: 'en-US', JP: 'ja-JP', KO: 'ko-KR', ZH: 'zh-CN' };
 var bcpMap = window.bcpMap;
 
+function getAppLanguage() {
+    let l = (localStorage.getItem('language') || localStorage.getItem('selectedLanguage') || 'EN').toUpperCase();
+    if (l === 'JA') l = 'JP';
+    return ['EN', 'JP', 'KO', 'ZH'].includes(l) ? l : 'EN';
+}
+window.getAppLanguage = getAppLanguage;
+var getAppLanguage = window.getAppLanguage;
+
+function t(key, params = {}) {
+    const lang = getAppLanguage();
+    const dict = window['LANG_' + lang + '_MUSIC'] || window['LANG_EN_MUSIC'] || {};
+    let str = dict[key] !== undefined ? dict[key] : key;
+    if (params) {
+        Object.keys(params).forEach(p => {
+            str = str.replace(new RegExp('\\{' + p + '\\}', 'g'), params[p]);
+        });
+    }
+    return str;
+}
+window.t = t;
+var t = window.t;
+
 window.LANG_EN_MUSIC = {
     TITLE: "Music",
     TITLE_YT: "Music (YT)",

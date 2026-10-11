@@ -11,6 +11,70 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.jsdelivr.net/gh/Polygol/polygol.github.io@main/assets/polygolapp/api/polygol-api.js"></script>
     <script src="lang.js"></script>
+    <script>
+        const bcpMap = window.bcpMap || { EN: 'en-US', JP: 'ja-JP', KO: 'ko-KR', ZH: 'zh-CN' };
+        window.bcpMap = bcpMap;
+        var bcpMap = window.bcpMap;
+
+        function getAppLanguage() {
+            let l = (localStorage.getItem('language') || localStorage.getItem('selectedLanguage') || 'EN').toUpperCase();
+            if (l === 'JA') l = 'JP';
+            return ['EN', 'JP', 'KO', 'ZH'].includes(l) ? l : 'EN';
+        }
+        window.getAppLanguage = getAppLanguage;
+        var getAppLanguage = window.getAppLanguage;
+
+        function t(key, params = {}) {
+            const lang = getAppLanguage();
+            const dict = window['LANG_' + lang + '_MUSIC'] || window['LANG_EN_MUSIC'] || {};
+            let str = dict[key] !== undefined ? dict[key] : key;
+            if (params) {
+                Object.keys(params).forEach(p => str = str.replace(new RegExp('\\{' + p + '\\}', 'g'), params[p]));
+            }
+            return str;
+        }
+        window.t = t;
+        var t = window.t;
+
+        function applyLanguage(langCode) {
+            if (langCode) localStorage.setItem('language', langCode);
+            const lang = getAppLanguage();
+            document.documentElement.lang = (window.bcpMap || bcpMap)[lang] || 'en-US';
+            
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const k = el.getAttribute('data-lang-key');
+                if (k) {
+                    if (el.tagName === 'TITLE') document.title = t(k);
+                    else el.textContent = t(k);
+                }
+            });
+            
+            document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+                const k = el.getAttribute('data-lang-placeholder');
+                if (k) el.placeholder = t(k);
+            });
+            
+            document.querySelectorAll('[data-lang-title]').forEach(el => {
+                const k = el.getAttribute('data-lang-title');
+                if (k) el.title = t(k);
+            });
+        }
+        window.applyLanguage = applyLanguage;
+
+        window.addEventListener('message', (e) => {
+            if (e.data && (e.data.type === 'languageUpdate' || e.data.type === 'localeUpdate')) {
+                applyLanguage(e.data.languageCode);
+            }
+        });
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'language' || e.key === 'selectedLanguage') {
+                applyLanguage(e.newValue);
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => applyLanguage());
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
@@ -8145,6 +8209,7 @@ async function loadSongsAndPlaylists() {
         });
     </script>
 <script>
+if (false) {
 const bcpMap = { EN: 'en-US', JP: 'ja-JP', KO: 'ko-KR', ZH: 'zh-CN' };
 window.bcpMap = bcpMap;
 function getAppLanguage() {
@@ -8193,6 +8258,7 @@ window.addEventListener('message', (e) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => applyLanguage());
+}
 </script>
 </body>
 </html>
